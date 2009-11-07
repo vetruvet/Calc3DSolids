@@ -1,0 +1,28 @@
+<html>
+
+<head>
+<title>Equations</title>
+</head>
+
+<body>
+
+<h1 align="center"><img src="../Images/equation.png" /> &nbsp;&nbsp;&nbsp;Writing Equations&nbsp;&nbsp;&nbsp; <img src="../Images/equation.png" /></h1>
+
+<p>Welcome the the Calculus 3D Solids Program!</p>
+<p>There are certain guidelines for writing equations for this program. These guidelines are pretty simple, and by following them, the program can better understand what input it is given.</p>
+<ul>
+<li>Input the equations as you would into a normal calculator.</li>
+<li>Do NOT surround the whole equation with parentheses. It's pointless and confuses the program.</li>
+<li>Do NOT include spaces. It may look good on paper, but they carry no function in the equation.</li>
+<li>For word operators (sin, abs, sqrt, tan, etc.), it is not necessary to include parentheses if the argument is just x. For example, sin(x) could be inputted as sinx, but sin(x^2) would have to be entered as sin(x^2).</li>
+</ul>
+
+<br />
+<h2>FAQ</h2>
+<ul>
+<li><b>The output isn't what I expected.</b> Check your equation, mainly the parentheses. It may help to write the equation down on paper.</li>
+</ul>
+
+</body>
+
+</html>
