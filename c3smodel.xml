@@ -1,0 +1,15 @@
+<Calc3DState>
+	<equations>
+		<equation used="true" var="x">x^2</equation>
+		<equation used="true" var="x">10-x^3+4x^2</equation>
+		<equation used="false" var="y">sqrt(y)+y^(pi/2)</equation>
+		<equation used="false" var="x"></equation>
+	</equations>
+	<rotation used="true">
+		<axis var="y">e+pi</axis>
+		<shapes type="disc">10</shapes>
+	</rotation>
+	<crosssect>
+		<shapes perpto="x" height="pi-e" type="0">5</shapes>
+	</crossect>
+</Calc3DState>

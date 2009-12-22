@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: CalcSolidsWindow
+Class-Path: vecmath.jar j3dcore.jar j3dutils.jar
+

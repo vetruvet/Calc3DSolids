@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Calc3DSolids/src/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="j3dcore.jar"/>
+	<classpathentry exported="true" kind="lib" path="j3dutils.jar"/>
+	<classpathentry exported="true" kind="lib" path="vecmath.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
