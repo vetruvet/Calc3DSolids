@@ -1,4 +1,0 @@
-
-public enum CrossSectionType {
-	CIRCLE, SEMICIRCLE, SQUARE, EQUI_TRIANGLE, ISO_TRIANGLE, RECTANGLE
-}
