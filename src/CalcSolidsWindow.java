@@ -2,7 +2,7 @@
  * Calculus 3D Solids Program
  * [Main Window Class]
  * 
- * Written by Valera Trubachev (C) 2009.
+ * Written by Valera Trubachev (C) 2009-2010.
  * 
  * Special thanks to Mr. Piesen for teaching me all this!
  * Also thanks to the Eclipse Foundation and
