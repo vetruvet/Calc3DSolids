@@ -137,18 +137,7 @@ public final class NativeLibLoader {
 	}
 	
 	private boolean unloadLib(String path) {
-		return unloadLib(path, 250, 8);
-	}
-	
-	private boolean unloadLib(String path, int timeout, int tries) {
-		File libFile = new File(path);
-		if (!libFile.exists()) return true;
-		boolean deled = libFile.delete();
-		if (deled) return true;
-		else {
-			if (tries > 0) return unloadLib(path, timeout, tries - 1);
-			else return !libFile.exists();
-		}
+		return CalcUtils.deleteWithRetry(path, 250, 8);
 	}
 	
 	public int getNBytes() {

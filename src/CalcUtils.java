@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -68,6 +69,18 @@ public class CalcUtils {
 			hexChars[q++] = HEX_CHAR_TBL[filt & 0xF]; //get 4 low bits (discard 4 high bits)
 		}
 		return new String(hexChars, "ASCII");
+	}
+	
+	public static boolean deleteWithRetry(String path, int timeout, int tries) {
+		File file = new File(path);
+		file.deleteOnExit();
+		if (!file.exists()) return true;
+		boolean deled = file.delete();
+		if (deled) return true;
+		else {
+			if (tries > 0) return deleteWithRetry(path, timeout, tries - 1);
+			else return !file.exists();
+		}
 	}
 	
 	/**
