@@ -107,13 +107,13 @@ public final class NativeLibLoader {
 			BufferedInputStream in = new BufferedInputStream(is);
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(libName));
 			
-			byte[] buf = new byte[512];
+			byte[] buf = new byte[2048];
 			int nRead = -1;
 			while ((nRead = in.read(buf)) != -1) {
 				bytesCopied += nRead;
 				if (listener != null)
 					listener.firePropertyChange("progress", new Integer(bytesCopied - 512), new Integer(bytesCopied));
-				out.write(buf);
+				out.write(buf, 0, nRead);
 			}
 			
 			in.close();
