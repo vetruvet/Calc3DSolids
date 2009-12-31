@@ -649,8 +649,12 @@ public class CalcSolidsWindow extends JFrame {
 				
 				final JEditorPane helpPane = new JEditorPane();
 				helpPane.setEditable(false);
+				helpPane.setContentType("text/html");
 				
-				final URL homeURL = CalcSolidsWindow.class.getResource("Help/general.html");
+				String helpPath = "Help/";
+				if (CalcConst.RUNNING_FROM_JAR) helpPath = "jar:file:" + CalcConst.JAR_PATH + "!/Help/";
+				
+				final URL homeURL = CalcSolidsWindow.class.getResource(helpPath + "general.html");
 				try {
 					helpPane.setPage(homeURL);
 				}
@@ -721,14 +725,34 @@ public class CalcSolidsWindow extends JFrame {
 					public void hyperlinkUpdate(HyperlinkEvent evt) {
 						if (evt.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
 						try {
-							backList.add(helpPane.getPage());
-							fwdList.clear();
-							helpPane.setPage(evt.getURL());
-							backButton.setEnabled(true);
-							fwdButton.setEnabled(false);
+							URL evtURL = evt.getURL();
+							if (evtURL.getProtocol().equals("mailto")) {
+								if (Desktop.isDesktopSupported()) {
+									Desktop desk = Desktop.getDesktop();
+									if (desk.isSupported(Desktop.Action.MAIL)) {
+										desk.mail(evtURL.toURI());
+									}
+									else {
+										JOptionPane.showMessageDialog(diag, "Your Desktop doesn't support mailing actions", "Unsupported Desktop", JOptionPane.ERROR_MESSAGE);
+									}
+								}
+								else {
+									JOptionPane.showMessageDialog(diag, "Your Desktop doesn't support mailing actions", "Unsupported Desktop", JOptionPane.ERROR_MESSAGE);
+								}
+							}
+							else {
+								backList.add(helpPane.getPage());
+								fwdList.clear();
+								helpPane.setPage(evtURL);
+								backButton.setEnabled(true);
+								fwdButton.setEnabled(false);
+							}
 						}
 						catch (IOException eIO) {
 							JOptionPane.showMessageDialog(diag, "URL not found: \n" + evt.getURL().toString(), "Bad URL!", JOptionPane.ERROR_MESSAGE);
+						} 
+						catch (URISyntaxException e) {
+							JOptionPane.showMessageDialog(diag, "Bad EMail format: " + evt.getURL().toString(), "Bad EMail Address!", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				});
