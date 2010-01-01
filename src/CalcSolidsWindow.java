@@ -895,10 +895,10 @@ public class CalcSolidsWindow extends JFrame {
 		aboutItem.getAccessibleContext().setAccessibleDescription("About this program");
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Calculus 3D Solids v2.0 (5959 SLoC)\n" +
+				JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Calculus 3D Solids v2.0.1 (6020 SLoC)\n" +
 						"\n" +
 						"Written by: Valera Trubachev\n" + 
-						"   \u00A9 2009\n" + 
+						"   \u00A9 2009-2010\n" + 
 						"\n" + 
 						"Special thanks to:\n" +
 						"   Mr. Piesen\n" +
