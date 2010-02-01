@@ -1,8 +1,6 @@
 import java.math.BigDecimal;
 
 public class Line2DBig {
-	public static final boolean DEBUG = false;
-	
 	private BigDecimal X1, X2, Y1, Y2;
 	private final boolean VERTICAL;
 	
@@ -78,20 +76,14 @@ public class Line2DBig {
 	}
 	
 	public boolean contains(BigDecimal x, BigDecimal y) {
-		if (DEBUG) System.out.println("Starting line contains code: " + x + ", " + y);
-		if (DEBUG) System.out.println(toString());
 		if (X1.compareTo(X2) == 0) {
-			if (DEBUG) System.out.println("Line is vertical");
 			if (x.compareTo(X1) != 0) return false;
-			if (DEBUG) System.out.println("Pt is collinear");
 			if ((y.compareTo(getLowY()) < 0) || (y.compareTo(getHighY()) > 0)) return false;
 			else return true;
 		}
 		
 		if ((x.compareTo(getLowX()) < 0) || (x.compareTo(getHighX()) > 0)) return false;
-		if (DEBUG) System.out.println("X match");
 		if ((y.compareTo(getLowY()) < 0) || (y.compareTo(getHighY()) > 0)) return false;
-		if (DEBUG) System.out.println("Y match");
 		
 		BigDecimal slp = getSlope();
 		BigDecimal a = slp.negate(CalcConst.MC);

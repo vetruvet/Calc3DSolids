@@ -7,8 +7,6 @@ import java.awt.Image;
 import java.net.URL;
 
 public class CalcUtils {
-	public static final boolean DEBUG = false;
-	
 	private static final byte[] HEX_CHAR_TBL = new byte[] {(byte) '0', (byte) '1', (byte) '2', (byte) '3', 
 		(byte) '4', (byte) '5', (byte) '6', (byte) '7', 
 		(byte) '8', (byte) '9', (byte) 'a', (byte) 'b', 

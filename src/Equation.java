@@ -2,8 +2,6 @@ import java.util.*;
 import java.math.*;
 
 public class Equation {
-	public static final boolean DEBUG = false;
-	
 	private String equString, indepVar;
 	private Operation rootOperation;
 	private boolean isParsed = false;
@@ -125,9 +123,6 @@ public class Equation {
 		
 		eqOpList = new Operand[opList.size()];
 		eqConstList = new BigDecimal[opList.size()];
-		
-		if (DEBUG) System.out.println("Number of OPCODEs: " + opList.size());
-		if (DEBUG) System.out.println("OPCODEs: " + opList.toString());
 		
 		Iterator<BigDecimal> itD = consts.iterator();
 		int q = 0;
@@ -277,7 +272,6 @@ public class Equation {
 			else retOp.setOperand1(parseExpr(foundAt + 1, upInd));
 		}
 		
-		if (DEBUG) System.out.println("Finished Parsing expression: from " + lowInd + " to " + upInd);
 		return retOp;
 	}
 	
@@ -292,7 +286,6 @@ public class Equation {
 	}
 	
 	public boolean isEqValid() {
-		if (DEBUG) System.out.println("Checking if equation is valid");
 		int nOpenP = CalcUtils.matchCount(equString, "(");
 		int nClseP = CalcUtils.matchCount(equString, ")");
 		if (nOpenP != nClseP) return false;
@@ -341,14 +334,12 @@ public class Equation {
 	
 	public Point2DBig[] intersectsWith(Equation equ) {
 		if (!this.isEqParsed() || !equ.isEqParsed()) return null;
-		if (DEBUG) System.out.println("Finding intersections with default bounds");
 		return intersectsWith(equ, new BigDecimal("-10.0"), new BigDecimal("10.0"));
 	}
 	
 	public Point2DBig[] intersectsWith(Equation equ, BigDecimal rangeFrom, BigDecimal rangeTo) {
 		if (!this.isEqParsed() || !equ.isEqParsed()) return null; 
 		if (rangeTo.subtract(rangeFrom, CalcConst.MC).compareTo(CalcConst.I_ACCURACY) < 0) System.out.println("WTF??");//throw new IllegalArgumentException("Invalid bounds for intersection search");
-		if (DEBUG) System.out.println("Finding intersections with bounds from " + rangeFrom + " to " + rangeTo);
 		final BigDecimal ZERO = BigDecimal.ZERO;
 		final Point2DBig[] EMPTY = new Point2DBig[] { };
 		
@@ -381,7 +372,6 @@ public class Equation {
 			}
 		}
 		catch (OperatorDomainException eOD) { }
-		if (DEBUG) System.out.println("Finished checking for constant functions");
 		
 		ArrayList<Point2DBig> xList = new ArrayList<Point2DBig>();
 		
@@ -438,12 +428,10 @@ public class Equation {
 			xPts[q++] = it.next();
 		}
 		
-		if (DEBUG) System.out.println("Intersections found: " + Arrays.asList(xPts).toString());
 		return xPts;
 	}
 	
 	private Point2DBig intersectsWith(Equation equ, BigDecimal rangeFrom, BigDecimal rangeTo, BigDecimal accuracy) {
-		if (DEBUG) System.out.println("Finding intersection from " + rangeFrom + " to " + rangeTo + " with step size " + accuracy);
 		Equation xEq = null, yEq = null;
 		boolean sameVar = !(this.isEqInX() ^ equ.isEqInX());
 		if (!sameVar) {
@@ -463,7 +451,6 @@ public class Equation {
 				lastDev = null;
 				continue;
 			}
-			if (DEBUG) System.out.println("Found deviation at q=" + q + ": " + dev + " (last: " + lastDev + ")");
 
 			if (dev.compareTo(new BigDecimal("0.0")) == 0) {
 				try {

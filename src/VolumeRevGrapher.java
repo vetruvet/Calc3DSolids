@@ -7,8 +7,6 @@ import com.sun.j3d.utils.geometry.*;
 public class VolumeRevGrapher extends Grapher {
 	private static final long serialVersionUID = -3113895888133881427L;
 	
-	public static final boolean DEBUG = false;
-	
 	public VolumeRevGrapher(PolygonBig poly, Equation[] equs, 
 			BigDecimal axis, boolean hAxis, int nInt, boolean disc) {
 		super(poly, equs, axis, hAxis, nInt, (disc) ? GraphType.VOL_REV_DISC : GraphType.VOL_REV_SHELL);

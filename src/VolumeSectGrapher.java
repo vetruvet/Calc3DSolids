@@ -7,8 +7,6 @@ import com.sun.j3d.utils.geometry.*;
 public class VolumeSectGrapher extends Grapher {
 	private static final long serialVersionUID = 1630089335941003370L;
 
-	public static final boolean DEBUG = false;
-	
 	private final boolean SECT_PERP_X;
 	private BigDecimal HEIGHT;
 	private static final CrossSectionType DEF_SHAPE = CrossSectionType.SQUARE;
@@ -143,8 +141,7 @@ public class VolumeSectGrapher extends Grapher {
 	}
 
 	public void addRepShapes() {
-		// TODO Auto-generated method stub
-		
+		// TODO Add representative shapes to x-sect graph
 	}
 
 	public void addSolid() {

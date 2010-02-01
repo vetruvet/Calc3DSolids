@@ -5,8 +5,6 @@ import java.util.*;
 import static java.lang.Math.*;
 
 public class SolidMaker {
-	public static final boolean DEBUG = false;
-	
 	public static Shape3D rotateShape(PolygonBig poly, BigDecimal axisVal, boolean hAxis) {
 		int nPtsInStrip = 2 * (CalcConst.VRES + 1);
 		int nStrips = poly.getNPoints();

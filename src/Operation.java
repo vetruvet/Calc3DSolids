@@ -1,8 +1,6 @@
 import java.math.BigDecimal;
 
 public class Operation {
-	public static final boolean DEBUG = false;
-	
 	private boolean TWO_OP;
 	private Object OPERAND1, OPERAND2;
 	private Operand OPCODE;

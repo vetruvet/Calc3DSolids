@@ -32,8 +32,6 @@ import javax.swing.filechooser.*;
 public class CalcSolidsWindow extends JFrame {
 	private static final long serialVersionUID = 3947075375906163527L;
 
-	public static final boolean DEBUG = false;
-	
 	private static final int EQU_WIDTH = 30;
 	private static final String EQ1HOLDER = "[Enter equation 1 here]";
 	private static final String EQ2HOLDER = "[Enter equation 2 here]";

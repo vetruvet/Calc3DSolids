@@ -2,8 +2,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class PolygonBig {
-	public static final boolean DEBUG = false;
-	
 	private ArrayList<Point2DBig> ptList = new ArrayList<Point2DBig>();
 	
 	public PolygonBig() {
@@ -32,61 +30,44 @@ public class PolygonBig {
 	}
 	
 	public boolean contains(Point2DBig pt, boolean incEdge) {
-		if (DEBUG) System.out.println("");
-		if (DEBUG) System.out.println("Starting container test code" + ((incEdge) ? ", including edges" : ""));
-		if (DEBUG) System.out.println("Point: " + pt.toString());
 		if ((pt.getX().compareTo(getMinX()) < 0) || (pt.getY().compareTo(getMinY()) < 0) || (pt.getX().compareTo(getMaxX()) > 0) || (pt.getY().compareTo(getMaxY()) > 0)) return false;
-		if (DEBUG) System.out.println("Pt inside bounding box");
 		for (Iterator<Point2DBig> it = ptList.iterator(); it.hasNext(); ) {
 			if (it.next().equals(pt)) {
-				if (DEBUG) System.out.println("Pt is a pt on poly");
 				if (incEdge) return true;
 				else return false;
 			}
 		}
-		if (DEBUG) System.out.println("Pt not a pt on poly");
 		Line2DBig[] sides = getSides();
 		for (int q = 0; q < sides.length; q++) {
 			if (sides[q].contains(pt)) {
-				if (DEBUG) System.out.println("Pt is on a side: " + sides[q].toString());
 				if (incEdge) return true;
 				else return false;
 			}
 		}
 		
-		if (DEBUG) System.out.println("Not on edge");
-		
 		int lHits = 0, rHits = 0;
 		for (int q = 0; q < sides.length; q++) {
-			if (DEBUG) System.out.println("Side iteration: side " + q + " = " + sides[q].toString());
 			if ((pt.getY().compareTo(sides[q].getLowY()) > 0) && (pt.getY().compareTo(sides[q].getHighY()) <= 0)) {
-				if (DEBUG) System.out.println("Pt is between Y-coords of side");
 				if (pt.getX().compareTo(sides[q].getHighX()) > 0) {
-					if (DEBUG) System.out.println("Side is way on left of pt");
 					lHits++;
 					continue;
 				}
 				if (pt.getX().compareTo(sides[q].getLowX()) < 0) {
-					if (DEBUG) System.out.println("Side is way on right of pt");
 					rHits++;
 					continue;
 				}
 				
 				BigDecimal xOnLine = sides[q].getXOnLine(pt.getY());
-				if (DEBUG) System.out.println("X-coord on the line: " + xOnLine);
 				if (pt.getX().compareTo(xOnLine) > 0) {
-					if (DEBUG) System.out.println("Side on left of pt");
 					lHits++;
 					continue;
 				}
 				if (pt.getX().compareTo(xOnLine) < 0) {
-					if (DEBUG) System.out.println("Side on right of pt");
 					rHits++;
 					continue;
 				}
 			}
 		}
-		if (DEBUG) System.out.println("Hits on left: " + lHits + "; right: " + rHits);
 		if ((lHits + rHits) % 2 != 0) return false;
 		return (lHits % 2 != 0);
 	}

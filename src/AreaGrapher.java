@@ -8,8 +8,6 @@ import com.sun.j3d.utils.geometry.*;
 public class AreaGrapher extends Grapher {
 	private static final long serialVersionUID = 3242743646013425267L;
 
-	public static final boolean DEBUG = false;
-	
 	private final boolean HAS_ROT_AXIS;
 	
 	public AreaGrapher(PolygonBig poly, Equation[] equs, BigDecimal axis, boolean hAxis, int nInt, GraphType type) {

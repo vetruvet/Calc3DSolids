@@ -1,8 +1,6 @@
 import java.math.BigDecimal;
 
 public class PolygonBuilder {
-	public static final boolean DEBUG = false;
-	
 	private final int NEQS;
 	private final Equation EQ1, EQ2, EQ3, EQ4;
 	private PolygonBig finalPoly = new PolygonBig();
@@ -501,11 +499,8 @@ public class PolygonBuilder {
 		PolygonBig poly = new PolygonBig();
 		BigDecimal eq1step = eq1high.subtract(eq1low, CalcConst.MC).divide(new BigDecimal(quality), CalcConst.MC);
 		BigDecimal eq2step = eq2high.subtract(eq2low, CalcConst.MC).divide(new BigDecimal(quality), CalcConst.MC);
-		if (DEBUG) System.out.println("EQ1 step: " + eq1step);
-		if (DEBUG) System.out.println("EQ2 step: " + eq2step);
 		for (int q = 0; q < quality; q++) {
 			BigDecimal iv = eq1low.add(eq1step.multiply(new BigDecimal(q), CalcConst.MC), CalcConst.MC);
-			if (DEBUG) System.out.println("EQ1, XY=" + iv);
 			try {
 				if (EQ1.isEqInX()) poly.addPoint(new Point2DBig(iv, EQ1.eval(iv)));
 				else poly.addPoint(new Point2DBig(EQ1.eval(iv), iv));
@@ -514,7 +509,6 @@ public class PolygonBuilder {
 		}
 		for (int q = 0; q < quality; q++) {
 			BigDecimal iv = eq2low.add(eq2step.multiply(new BigDecimal(q), CalcConst.MC), CalcConst.MC);
-			if (DEBUG) System.out.println("EQ2, XY=" + iv);
 			try {
 				if (EQ2.isEqInX()) poly.addPoint(new Point2DBig(iv, EQ2.eval(iv)));
 				else poly.addPoint(new Point2DBig(EQ2.eval(iv), iv));
@@ -533,7 +527,6 @@ public class PolygonBuilder {
 		BigDecimal eq3step = eq3high.subtract(eq3low, CalcConst.MC).divide(new BigDecimal(quality), CalcConst.MC);
 		BigDecimal iv = eq1low;
 		for (int q = 0; q < quality; q++, iv = iv.add(eq1step, CalcConst.MC)) {
-			if (DEBUG) System.out.println("EQ1, XY=" + iv);
 			try {
 				if (EQ1.isEqInX()) poly.addPoint(new Point2DBig(iv, EQ1.eval(iv)));
 				else poly.addPoint(new Point2DBig(EQ1.eval(iv), iv));
@@ -542,7 +535,6 @@ public class PolygonBuilder {
 		}
 		iv = eq3low;
 		for (int q = 0; q < quality; q++, iv = iv.add(eq3step, CalcConst.MC)) {
-			if (DEBUG) System.out.println("EQ3, XY=" + iv);
 			try {
 				if (EQ3.isEqInX()) poly.addPoint(new Point2DBig(iv, EQ3.eval(iv)));
 				else poly.addPoint(new Point2DBig(EQ3.eval(iv), iv));
@@ -551,7 +543,6 @@ public class PolygonBuilder {
 		}
 		iv = eq2low;
 		for (int q = 0; q < quality; q++, iv = iv.add(eq2step, CalcConst.MC)) {
-			if (DEBUG) System.out.println("EQ2, XY=" + iv);
 			try {
 				if (EQ2.isEqInX()) poly.addPoint(new Point2DBig(iv, EQ2.eval(iv)));
 				else poly.addPoint(new Point2DBig(EQ2.eval(iv), iv));
