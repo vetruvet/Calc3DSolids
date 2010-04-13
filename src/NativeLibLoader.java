@@ -1,6 +1,10 @@
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * @author Vetruvet
+ *
+ */
 public final class NativeLibLoader {
 	private static final String[] WIN_LIBS = new String[] { "lib/j3dcore-d3d.dll",
 		/*"lib/j3dcore-ogl-cg.dll",*/
@@ -22,6 +26,10 @@ public final class NativeLibLoader {
 	
 	private static NativeLibLoader instance = null;
 	
+	
+	/**
+	 * @return
+	 */
 	public static synchronized NativeLibLoader getInstance() {
 		if (instance == null) instance = new NativeLibLoader();
 		return instance;
@@ -31,10 +39,16 @@ public final class NativeLibLoader {
 		OS = detectOS();
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException("Cloning NativeLibLoader not allowed!");
 	}
 	
+	/**
+	 * @throws UnsupportedOSException
+	 */
 	public void loadLibs() throws UnsupportedOSException {
 		String[] libs;
 		switch (OS) {
@@ -60,6 +74,9 @@ public final class NativeLibLoader {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean unloadLibs() {
 		String[] libs;
 		switch (OS) {
@@ -87,6 +104,10 @@ public final class NativeLibLoader {
 		
 	}
 	
+	/**
+	 * @param paths
+	 * @return
+	 */
 	public boolean unloadLibs(String[] paths) {
 		try { Thread.sleep(1000); } catch (InterruptedException e) { }
 		for (String lib : paths) {
@@ -96,6 +117,10 @@ public final class NativeLibLoader {
 		return true;
 	}
 	
+	/**
+	 * @param path
+	 * @return
+	 */
 	private boolean loadLib(String path) {
 		String libName = path.substring(path.lastIndexOf('/') + 1).replaceFirst("\\.x((32)|(64))$$", "");
 		InputStream is = getClass().getClassLoader().getResourceAsStream(path);
@@ -132,14 +157,24 @@ public final class NativeLibLoader {
 		return true;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String[] getLoadedLibs() {
 		return loadedLibs.toArray(new String[] { });
 	}
 	
+	/**
+	 * @param path
+	 * @return
+	 */
 	private boolean unloadLib(String path) {
 		return CalcUtils.deleteWithRetry(path, 250, 8);
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getNBytes() {
 		int[] sizes;
 		switch (OS) {
@@ -166,6 +201,9 @@ public final class NativeLibLoader {
 		return tot;
 	}
 	
+	/**
+	 * @return
+	 */
 	private static OSType detectOS() {
 		boolean is64bit = System.getProperty("os.arch").indexOf("64") != -1;
 		
@@ -186,10 +224,16 @@ public final class NativeLibLoader {
 		return OSType.OTHER;
 	}
 	
+	/**
+	 * @param task
+	 */
 	public void setLoaderTask(CalcSolidsWindow.LoaderTask task) {
 		listener = task;
 	}
 	
+	/**
+	 * 
+	 */
 	public void removeLoaderTask() {
 		listener = null;
 	}

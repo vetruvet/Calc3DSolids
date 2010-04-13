@@ -12,6 +12,11 @@ public class CalcUtils {
 		(byte) '8', (byte) '9', (byte) 'a', (byte) 'b', 
 		(byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'};
 	
+	/**
+	 * @param src
+	 * @param toMatch
+	 * @return
+	 */
 	public static int matchCount(String src, String toMatch) {
 		int occurs = 0;
 		int lastIndex = src.indexOf(toMatch);
@@ -24,22 +29,38 @@ public class CalcUtils {
 		return occurs;
 	}
 	
+	/**
+	 * @param path
+	 * @return
+	 */
 	public static Image getImage(String path) {
 		ImageIcon ii = getImageIcon(path);
 		if (ii != null) return ii.getImage();
 		else return null;
 	}
 	
+	/**
+	 * @param path
+	 * @return
+	 */
 	public static ImageIcon getImageIcon(String path) {
 		URL iconURL = CalcSolidsWindow.class.getResource(path);
 		if (iconURL != null) return new ImageIcon(iconURL);
 		else return null;
 	}
 	
+	/**
+	 * @param p
+	 * @return
+	 */
 	public static Point2DBig flipXY(Point2DBig p) {
 		return new Point2DBig(p.getY(), p.getX());
 	}
 	
+	/**
+	 * @param in
+	 * @return
+	 */
 	public static String arrayAsStr(int[] in) {
 		String out = "";
 		for (int q = 0; q < in.length - 1; q++) {
@@ -49,6 +70,12 @@ public class CalcUtils {
 		return out;
 	}
 	
+	/**
+	 * @param in
+	 * @param lowInd
+	 * @param highInd
+	 * @return
+	 */
 	public static String subarrayAsStr(int[] in, int lowInd, int highInd) {
 		String out = "";
 		for (int q = lowInd; q < highInd; q++) {
@@ -58,6 +85,11 @@ public class CalcUtils {
 		return out;
 	}
 	
+	/**
+	 * @param rawData
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
 	public static String byteArrayToHexStr(byte[] rawData) throws UnsupportedEncodingException {
 		byte[] hexChars = new byte[rawData.length * 2];
 		int q = 0;
@@ -69,6 +101,12 @@ public class CalcUtils {
 		return new String(hexChars, "ASCII");
 	}
 	
+	/**
+	 * @param path
+	 * @param timeout
+	 * @param tries
+	 * @return
+	 */
 	public static boolean deleteWithRetry(String path, int timeout, int tries) {
 		File file = new File(path);
 		file.deleteOnExit();
@@ -84,6 +122,8 @@ public class CalcUtils {
 	/**
 	 * Rewritten from source of java.awt.geom.Line2D.relativeCCW()
 	 * Needs to use BigDecimal for precision purposes.
+	 *
+	 * @see java.awt.geom.Line2D#relativeCCW(java.awt.geom.Point2D)
 	 */
 	protected static int relativeCCW(BigDecimal x1, BigDecimal y1, 
 			BigDecimal x2, BigDecimal y2, 
@@ -112,6 +152,8 @@ public class CalcUtils {
 	/**
 	 * Rewritten from source of java.awt.geom.Line2D.linesIntersect()
 	 * Needs to use BigDecimal for precision purposes.
+	 * 
+	 * @see java.awt.geom.Line2D#linesIntersect(double, double, double, double, double, double, double, double)
 	 */
 	protected static boolean linesIntersect(BigDecimal x1, BigDecimal y1, 
 			BigDecimal x2, BigDecimal y2, 
@@ -123,10 +165,20 @@ public class CalcUtils {
 						relativeCCW(x3, y3, x4, y4, x2, y2) <= 0));
 	}
 	
+	/**
+	 * @param l1
+	 * @param l2
+	 * @return
+	 */
 	protected static boolean linesIntersect(Line2DBig l1, Line2DBig l2) {
 		return linesIntersect(l1.getX1(), l1.getY1(), l1.getX2(), l1.getY2(), l2.getX1(), l2.getY1(), l2.getX2(), l2.getY2());
 	}
 	
+	/**
+	 * @param <E>
+	 * @param list
+	 * @return
+	 */
 	public static <E> ArrayList<E> removeRepeats(ArrayList<E> list) {
 		ArrayList<E> unique = new ArrayList<E>();
 		for (Iterator<E> itL = list.iterator(); itL.hasNext(); ) {
@@ -144,6 +196,10 @@ public class CalcUtils {
 		return unique;
 	}
 	
+	/**
+	 * @param op
+	 * @return
+	 */
 	public static String operandAsString(Operand op) {
 		switch(op) {
 		case PLUS:
@@ -209,10 +265,18 @@ public class CalcUtils {
 		}
 	}
 	
+	/**
+	 * @param op
+	 * @return
+	 */
 	public static int operandStrLen(Operand op) {
 		return operandAsString(op).length();
 	}
 	
+	/**
+	 * @param shape
+	 * @return
+	 */
 	public static String crossSectShapeAsStr(CrossSectionType shape) {
 		switch (shape) {
 		case CIRCLE:

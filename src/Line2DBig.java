@@ -4,6 +4,12 @@ public class Line2DBig {
 	private BigDecimal X1, X2, Y1, Y2;
 	private final boolean VERTICAL;
 	
+	/**
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 */
 	public Line2DBig(BigDecimal x1, BigDecimal y1, BigDecimal x2, BigDecimal y2) {
 		X1 = x1;
 		X2 = x2;
@@ -12,42 +18,73 @@ public class Line2DBig {
 		VERTICAL = (X1.compareTo(X2) == 0);
 	}
 	
+	/**
+	 * @param pt1
+	 * @param pt2
+	 */
 	public Line2DBig(Point2DBig pt1, Point2DBig pt2) {
 		this(pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY());
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getX1() {
 		return X1;
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getY1() {
 		return Y1;
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getX2() {
 		return X2;
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getY2() {
 		return Y2;
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getLowX() {
 		return X1.min(X2);
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getHighX() {
 		return X1.max(X2);
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getLowY() {
 		return Y1.min(Y2);
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getHighY() {
 		return Y1.max(Y2);
 	}
 	
+	/**
+	 * @return
+	 */
 	public BigDecimal getSlope() {
 		if (VERTICAL) return null;
 		BigDecimal dX = X2.subtract(X1, CalcConst.MC);
@@ -55,6 +92,10 @@ public class Line2DBig {
 		return dY.divide(dX, CalcConst.MC);
 	}
 	
+	/**
+	 * @param x
+	 * @return
+	 */
 	public BigDecimal getYOnLine(BigDecimal x) {
 		if ((x.compareTo(getLowX()) < 0) || (x.compareTo(getHighX()) > 0)) return null;
 		if (VERTICAL) return Y1;
@@ -63,6 +104,10 @@ public class Line2DBig {
 		return Y1.add(dx.multiply(slope, CalcConst.MC), CalcConst.MC);
 	}
 	
+	/**
+	 * @param y
+	 * @return
+	 */
 	public BigDecimal getXOnLine(BigDecimal y) {
 		if ((y.compareTo(getLowY()) < 0) || (y.compareTo(getHighY()) > 0)) return null;
 		if (VERTICAL) return X1;
@@ -71,10 +116,19 @@ public class Line2DBig {
 		return X1.add(dy.divide(slope, CalcConst.MC), CalcConst.MC);
 	}
 	
+	/**
+	 * @param pt
+	 * @return
+	 */
 	public boolean contains(Point2DBig pt) {
 		return contains(pt.getX(), pt.getY());
 	}
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public boolean contains(BigDecimal x, BigDecimal y) {
 		if (X1.compareTo(X2) == 0) {
 			if (x.compareTo(X1) != 0) return false;
@@ -95,6 +149,9 @@ public class Line2DBig {
 		return (d2.compareTo(CalcConst.TOLERANCE) <= 0);
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		String out = "";
 		out += "Line: from (";

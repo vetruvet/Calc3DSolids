@@ -34,6 +34,14 @@ public abstract class Grapher extends JPanel {
 	protected static final int SHOW_WIREFRAMES = 256;
 	protected static int DEFAULT_CAP = 0;
 	
+	/**
+	 * @param poly
+	 * @param equs
+	 * @param axis
+	 * @param hAxis
+	 * @param nInt
+	 * @param type
+	 */
 	public Grapher(PolygonBig poly, Equation[] equs,
 			BigDecimal axis, boolean hAxis,
 			int nInt, GraphType type) {
@@ -85,10 +93,16 @@ public abstract class Grapher extends JPanel {
 		System.out.println("Goodby grapher!");
 	}
 	
+	/**
+	 * 
+	 */
 	public void resetView() {
 		orbit.goHome();
 	}
 	
+	/**
+	 * @param mask
+	 */
 	public void addCapabilities(int mask) {
 		if ((mask & SHOW_AXES) != 0) addAxes();
 		if ((mask & SHOW_EQ[0]) != 0) addEquation(0);
@@ -101,6 +115,9 @@ public abstract class Grapher extends JPanel {
 		if ((mask & SHOW_REP_SHAPES) != 0) addRepShapes();
 	}
 	
+	/**
+	 * 
+	 */
 	public void addAllFeatures() {
 		addAxes();
 		addEquations();
@@ -110,12 +127,18 @@ public abstract class Grapher extends JPanel {
 		addRepShapes();
 	}
 	
+	/**
+	 * 
+	 */
 	public void addEquations() {
 		for (int q = 0; q < EQS.length; q++) {
 			addEquation(q);
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	public void toggleAxes() {
 		if ((capabilities & SHOW_AXES) == 0) {
 			addAxes();
@@ -127,6 +150,9 @@ public abstract class Grapher extends JPanel {
 		addCapabilities(newCaps);
 	}
 	
+	/**
+	 * 
+	 */
 	public void toggleSolid() {
 		if ((capabilities & SHOW_SOLID) == 0) {
 			addSolid();
@@ -138,6 +164,9 @@ public abstract class Grapher extends JPanel {
 		addCapabilities(newCaps);
 	}
 	
+	/**
+	 * 
+	 */
 	public void toggleWireframes() {
 		if ((capabilities & SHOW_WIREFRAMES) == 0) {
 			addWireframes();
@@ -149,6 +178,9 @@ public abstract class Grapher extends JPanel {
 		addCapabilities(newCaps);
 	}
 	
+	/**
+	 * 
+	 */
 	public void toggleFlatPoly() {
 		if ((capabilities & SHOW_FLAT_POLY) == 0) {
 			addFlatPoly();
@@ -160,6 +192,9 @@ public abstract class Grapher extends JPanel {
 		addCapabilities(newCaps);
 	}
 	
+	/**
+	 * 
+	 */
 	public void toggleRepShapes() {
 		if ((capabilities & SHOW_REP_SHAPES) == 0) {
 			addRepShapes();
@@ -171,12 +206,18 @@ public abstract class Grapher extends JPanel {
 		addCapabilities(newCaps);
 	}
 	
+	/**
+	 * 
+	 */
 	public void toggleEquations() {
 		for (int q = 0; q < EQS.length; q++) {
 			toggleEquation(q);
 		}
 	}
 
+	/**
+	 * @param index
+	 */
 	private void toggleEquation(int index) {
 		if ((capabilities & SHOW_EQ[index]) == 0) {
 			addEquation(index);
@@ -188,6 +229,9 @@ public abstract class Grapher extends JPanel {
 		addCapabilities(newCaps);
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isShowEqus() {
 		for (int q = 0; q < EQS.length; q++) {
 			if ((capabilities & SHOW_EQ[q]) == 0) return false;
@@ -195,18 +239,30 @@ public abstract class Grapher extends JPanel {
 		return true;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isShowAxes() {
 		return ((capabilities & SHOW_AXES) != 0);
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isShowSolid() {
 		return ((capabilities & SHOW_SOLID) != 0);
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isShowWireframes() {
 		return ((capabilities & SHOW_WIREFRAMES) != 0);
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isShowFlatPoly() {
 		return ((capabilities & SHOW_FLAT_POLY) != 0);
 	}

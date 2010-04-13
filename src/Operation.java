@@ -1,11 +1,20 @@
 import java.math.BigDecimal;
 
+/**
+ * @author Vetruvet
+ * 
+ */
 public class Operation {
 	private boolean TWO_OP;
 	private Object OPERAND1, OPERAND2;
 	private Operand OPCODE;
 	private boolean opCodeSet, op1Set, op2Set;
 	
+	/**
+	 * @param opCode
+	 * @param op1
+	 * @param op2
+	 */
 	public Operation(Operand opCode, Object op1, Object op2) {
 		if (!((op1 instanceof BigDecimal) || (op1 instanceof Operation))) throw new IllegalArgumentException("Invalid Operand");
 		if (!((op2 instanceof BigDecimal) || (op2 instanceof Operation))) throw new IllegalArgumentException("Invalid Operand");
@@ -16,6 +25,10 @@ public class Operation {
 		opCodeSet = op1Set = op2Set = true;
 	}
 	
+	/**
+	 * @param opCode
+	 * @param op
+	 */
 	public Operation(Operand opCode, Object op) {
 		if (!((op instanceof BigDecimal) || (op instanceof Operation))) throw new IllegalArgumentException("Invalid Operand");
 		TWO_OP = false;
@@ -25,6 +38,9 @@ public class Operation {
 		opCodeSet = op1Set = op2Set = true;
 	}
 	
+	/**
+	 * @param opCode
+	 */
 	public Operation(Operand opCode) {
 		OPCODE = opCode;
 		switch (OPCODE) {
@@ -41,8 +57,14 @@ public class Operation {
 		op1Set = op2Set = false;
 	}
 	
+	/**
+	 * 
+	 */
 	public Operation() { }
 	
+	/**
+	 * @return
+	 */
 	public boolean isConstant() {
 		if (OPCODE == Operand.CONSTANT) return true;
 		if (OPCODE == Operand.INDEP_VAR) return false;
@@ -71,6 +93,12 @@ public class Operation {
 		return false;
 	}
 	
+	/**
+	 * @param indVar
+	 * @return
+	 * @throws InvalidOperatorException
+	 * @throws OperatorDomainException
+	 */
 	public BigDecimal eval(BigDecimal indVar) throws InvalidOperatorException, OperatorDomainException {
 		if (OPCODE == Operand.INDEP_VAR) return indVar.round(CalcConst.MC);
 		if (OPCODE == Operand.CONSTANT) return ((BigDecimal) OPERAND1).round(CalcConst.MC);
@@ -172,6 +200,9 @@ public class Operation {
 		}
 	}
 	
+	/**
+	 * @param opCode
+	 */
 	public void setOpCode(Operand opCode) {
 		OPCODE = opCode;
 		opCodeSet = true;
@@ -187,10 +218,16 @@ public class Operation {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	public Operand getOpCode() {
 		return OPCODE;
 	}
 	
+	/**
+	 * @param op
+	 */
 	public void setOperand1(Object op) {
 		if (!opCodeSet) return;
 		if (!op1Set) {
@@ -203,6 +240,9 @@ public class Operation {
 		}
 	}
 	
+	/**
+	 * @param op
+	 */
 	public void setOperand2(Object op) {
 		if (!opCodeSet) return;
 		if (!op2Set) {
@@ -211,6 +251,9 @@ public class Operation {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		switch (OPCODE) {
 		case PLUS:
