@@ -1179,8 +1179,12 @@ public class CalcSolidsWindow extends JFrame {
 			
 			diag.addWindowListener(new WindowListener() {
 				public void windowClosing(WindowEvent e) {
+					aGraph.cleanup();
 					graphEqu.setEnabled(true);
 					graphEquMenu.setEnabled(true);
+					
+					aGraph = null;
+					diag = null;
 				}
 				public void windowOpened(WindowEvent e) {
 					graphEqu.setEnabled(false);
@@ -1197,10 +1201,6 @@ public class CalcSolidsWindow extends JFrame {
 			setProgressBar("Showing Graph.");
 			diag.setVisible(true);
 			setProgressBar(PROGRESS_READY);
-			
-			aGraph = null;
-			diag = null;
-			System.gc();
 			return null;
 		}
 	}
@@ -1208,6 +1208,7 @@ public class CalcSolidsWindow extends JFrame {
 	class AreaTask extends SwingWorker<Void, Void> {
 		private AreaGrapher aGraph = null;
 		private JDialog diag = null;
+		private ArrayList<Component> listenClear = new ArrayList<Component>();
 		
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
@@ -1263,6 +1264,7 @@ public class CalcSolidsWindow extends JFrame {
 				}
 			});
 			togglePan.add(axisTg);
+			listenClear.add(axisTg);
 			
 			JToggleButton polyTg = new JToggleButton("Region", true);
 			polyTg.getAccessibleContext().setAccessibleDescription("Toggle the shaded area on or off");
@@ -1272,6 +1274,7 @@ public class CalcSolidsWindow extends JFrame {
 				}
 			});
 			togglePan.add(polyTg);
+			listenClear.add(polyTg);
 			
 			JToggleButton equTg = new JToggleButton("Functions", true);
 			equTg.getAccessibleContext().setAccessibleDescription("Toggle the equations on or off");
@@ -1281,6 +1284,7 @@ public class CalcSolidsWindow extends JFrame {
 				}
 			});
 			togglePan.add(equTg);
+			listenClear.add(equTg);
 			
 			JToggleButton rectTg = new JToggleButton("Rep. Rectangle", true);
 			rectTg.getAccessibleContext().setAccessibleDescription("Toggle the representative rectangle on or off");
@@ -1290,6 +1294,7 @@ public class CalcSolidsWindow extends JFrame {
 				}
 			});
 			togglePan.add(rectTg);
+			listenClear.add(rectTg);
 			
 			JPanel colorRoot = new JPanel();
 			colorRoot.setLayout(new BoxLayout(colorRoot, BoxLayout.PAGE_AXIS));
@@ -1312,6 +1317,7 @@ public class CalcSolidsWindow extends JFrame {
 				}
 			});
 			colorRoot.add(viewReset);
+			listenClear.add(viewReset);
 			
 			Border padding = BorderFactory.createEmptyBorder(2, 0, 3, 0);
 			
@@ -1357,6 +1363,13 @@ public class CalcSolidsWindow extends JFrame {
 			
 			diag.addWindowListener(new WindowListener() {
 				public void windowClosing(WindowEvent e) {
+					aGraph.cleanup();
+					for (Component comp : listenClear) CalcUtils.removeAllListeners(comp);
+					diag.removeAll();
+					
+					aGraph = null;
+					diag = null;
+
 					graph2D.setEnabled(true);
 					graph2DMenu.setEnabled(true);
 				}
@@ -1375,10 +1388,8 @@ public class CalcSolidsWindow extends JFrame {
 			setProgressBar("Showing Graph.");
 			diag.setVisible(true);
 			setProgressBar(PROGRESS_READY);
+			listenClear.add(diag);
 			
-			aGraph = null;
-			diag = null;
-			System.gc();
 			return null;
 		}
 	}
@@ -1565,8 +1576,12 @@ public class CalcSolidsWindow extends JFrame {
 			
 			diag.addWindowListener(new WindowListener() {
 				public void windowClosing(WindowEvent e) {
+					vGraph.cleanup();
 					graph3D.setEnabled(true);
 					graph3DMenu.setEnabled(true);
+					
+					vGraph = null;
+					diag = null;
 				}
 				public void windowOpened(WindowEvent e) {
 					graph3D.setEnabled(false);
@@ -1584,9 +1599,6 @@ public class CalcSolidsWindow extends JFrame {
 			diag.setVisible(true);
 			setProgressBar(PROGRESS_READY);
 			
-			vGraph = null;
-			diag = null;
-			System.gc();
 			return null;
 		}
 	}

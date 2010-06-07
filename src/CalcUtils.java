@@ -1,8 +1,11 @@
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.util.*;
 import javax.swing.ImageIcon;
+
+import java.awt.Component;
 import java.awt.Image;
 import java.net.URL;
 
@@ -293,6 +296,33 @@ public class CalcUtils {
 			return "Isosceles Triangle";
 		default:
 			return "";
+		}
+	}
+	
+	
+	public static void removeAllListeners(Component comp) {
+		Method[] methods = comp.getClass().getMethods();
+		for (int q = 0; q < methods.length; q++) {
+			Method method = methods[q];
+			String name = method.getName();
+			if (name.startsWith("remove") && name.endsWith("Listener")) {
+				Class[] params = method.getParameterTypes();
+				if (params.length == 1) {
+					EventListener[] listeners = null;
+					try {
+						listeners = comp.getListeners(params[0]);
+					}
+					catch (Exception e) {
+						continue;
+					}
+					for (int j = 0; j < listeners.length; j++) {
+						try {
+							method.invoke(comp, new Object[]{listeners[j]});
+						}
+						catch (Exception e) { }
+					}
+				}
+			}
 		}
 	}
 }

@@ -21,8 +21,9 @@ public abstract class Grapher extends JPanel {
 	protected final double TILT3D_X = Math.PI / -8.0;
 	protected final double TILT3D_Y = Math.PI / 4.0;
 	
-	protected final BranchGroup root;
-	protected final OrbitBehavior orbit;
+	protected BranchGroup root;
+	protected OrbitBehavior orbit;
+	protected SimpleUniverse universe;
 	
 	protected int capabilities = 0;
 	protected static final int SHOW_AXES = 1;
@@ -74,12 +75,13 @@ public abstract class Grapher extends JPanel {
 		root.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		root.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		root.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		root.setCapability(BranchGroup.ALLOW_DETACH);
 		root.compile();
 		
-		SimpleUniverse univ = new SimpleUniverse(c3d);
-		ViewingPlatform view = univ.getViewingPlatform();
+		universe = new SimpleUniverse(c3d);
+		ViewingPlatform view = universe.getViewingPlatform();
 		view.setNominalViewingTransform();
-		univ.addBranchGraph(root);
+		universe.addBranchGraph(root);
 
 		BoundingBox bounds = new BoundingBox(new Point3d(CalcConst.MIN_COORD, CalcConst.MIN_COORD, CalcConst.MIN_COORD), 
 				new Point3d(CalcConst.MAX_COORD, CalcConst.MAX_COORD, CalcConst.MAX_COORD));
@@ -89,8 +91,24 @@ public abstract class Grapher extends JPanel {
 		view.setViewPlatformBehavior(orbit);
 	}
 	
-	public void finalize() {
-		System.out.println("Goodby grapher!");
+	public void cleanup() {
+		root.removeAllChildren();
+		root.detach();
+		
+		CalcUtils.removeAllListeners(universe.getCanvas());
+		
+		View view = universe.getCanvas().getView();
+		view.stopView();
+		view.stopBehaviorScheduler();
+		view.getCanvas3D(0).stopRenderer();
+		view.removeAllCanvas3Ds();
+		
+		removeAll();
+		universe.removeAllLocales();
+		universe.cleanup();
+		universe = null;
+		orbit = null;
+		System.gc();
 	}
 	
 	/**
