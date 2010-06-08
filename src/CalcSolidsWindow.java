@@ -39,9 +39,11 @@ public class CalcSolidsWindow extends JFrame {
 	private static final String EQ4HOLDER = "[Enter equation 4 here]";
 	private static final String AXSHOLDER = "[Axis value]";
 	private static final String HEIGHTHOLDER = "[Height]";
+	private static final String DIRTY_MARKER = " [OUT OF SYNC WITH INPUT]";
 	private static final Color HOLDER_COLOR = new Color(128, 128, 128);
 	private static final String PROGRESS_READY = "Ready.";
 	private File lastPath;
+	private String lastText;
 	
 	private JTextField eq1Text, eq2Text, eq3Text, eq4Text, axisText, heightText;
 	private JCheckBox useEq1, useEq2, useEq3, useEq4;
@@ -54,6 +56,10 @@ public class CalcSolidsWindow extends JFrame {
 	private JTabbedPane solidTabs;
 	private JPanel sectionHeightPanel;
 	private JLabel repShapeLabel;
+	
+	private JPanel graphContentPanel;
+	private Grapher graph;
+	private HashMap<String, JLabel> graphLabels = new HashMap<String, JLabel>();
 	
 	private PolygonBig initPoly;
 	private BigDecimal initAxis, initHeight;
@@ -161,8 +167,9 @@ public class CalcSolidsWindow extends JFrame {
 		CSW.createGUI();
 		CSW.createMenuBar();
 		CSW.pack();
-		CSW.setResizable(false);
+		CSW.setResizable(true);
 		CSW.setVisible(true);
+		CSW.setMinimumSize(CSW.getSize());
 		
 		CSW.addWindowListener(new WindowListener() {
 			public void windowClosing(WindowEvent e) {
@@ -201,19 +208,24 @@ public class CalcSolidsWindow extends JFrame {
 	}
 	
 	public void createGUI() {
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.LINE_AXIS));
+		
+		JPanel inputPanel = new JPanel();
+		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+		inputPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+		getContentPane().add(inputPanel);
 		
 		JLabel title = new JLabel("Calculus 3D Solids");
-		title.setFont(new Font("Serif", Font.BOLD, 24));
+		title.setFont(new Font("Serif", Font.BOLD, 30));
 		title.setForeground(Color.RED.darker());
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);
 		title.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-		getContentPane().add(title);
+		inputPanel.add(title);
 		
 		JPanel equPanel = new JPanel();
 		equPanel.setLayout(new BoxLayout(equPanel, BoxLayout.PAGE_AXIS));
 		equPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Equations"));
-		getContentPane().add(equPanel);
+		inputPanel.add(equPanel);
 		
 		// ==== EQUATION PANEL 1 ====
 		JPanel e1Panel = new JPanel(new FlowLayout());
@@ -236,11 +248,19 @@ public class CalcSolidsWindow extends JFrame {
 				if (eq1Text.getText().equals(EQ1HOLDER)) eq1Text.setText("");
 				eq1Text.setForeground(Color.BLACK);
 				eq1Text.selectAll();
+				lastText = eq1Text.getText();
 			}
 			public void focusLost(FocusEvent e) {
 				if (eq1Text.getText().equals("")) {
 					eq1Text.setText(EQ1HOLDER);
 					eq1Text.setForeground(HOLDER_COLOR);
+				}
+				if (!eq1Text.getText().equalsIgnoreCase(lastText)) {
+					TitledBorder border = ((TitledBorder) graphContentPanel.getBorder());
+					if (!border.getTitle().endsWith(DIRTY_MARKER)) {
+						border.setTitle(border.getTitle() + DIRTY_MARKER);
+						graphContentPanel.repaint();
+					}
 				}
 			}
 		});
@@ -267,11 +287,19 @@ public class CalcSolidsWindow extends JFrame {
 				if (eq2Text.getText().equals(EQ2HOLDER)) eq2Text.setText("");
 				eq2Text.setForeground(Color.BLACK);
 				eq2Text.selectAll();
+				lastText = eq2Text.getText();
 			}
 			public void focusLost(FocusEvent e) {
 				if (eq2Text.getText().equals("")) {
 					eq2Text.setText(EQ2HOLDER);
 					eq2Text.setForeground(HOLDER_COLOR);
+				}
+				if (!eq2Text.getText().equalsIgnoreCase(lastText)) {
+					TitledBorder border = ((TitledBorder) graphContentPanel.getBorder());
+					if (!border.getTitle().endsWith(DIRTY_MARKER)) {
+						border.setTitle(border.getTitle() + DIRTY_MARKER);
+						graphContentPanel.repaint();
+					}
 				}
 			}
 		});
@@ -298,11 +326,19 @@ public class CalcSolidsWindow extends JFrame {
 				if (eq3Text.getText().equals(EQ3HOLDER)) eq3Text.setText("");
 				eq3Text.setForeground(Color.BLACK);
 				eq3Text.selectAll();
+				lastText = eq3Text.getText();
 			}
 			public void focusLost(FocusEvent e) {
 				if (eq3Text.getText().equals("")) {
 					eq3Text.setText(EQ3HOLDER);
 					eq3Text.setForeground(HOLDER_COLOR);
+				}
+				if (!eq3Text.getText().equalsIgnoreCase(lastText)) {
+					TitledBorder border = ((TitledBorder) graphContentPanel.getBorder());
+					if (!border.getTitle().endsWith(DIRTY_MARKER)) {
+						border.setTitle(border.getTitle() + DIRTY_MARKER);
+						graphContentPanel.repaint();
+					}
 				}
 			}
 		});
@@ -329,11 +365,19 @@ public class CalcSolidsWindow extends JFrame {
 				if (eq4Text.getText().equals(EQ4HOLDER)) eq4Text.setText("");
 				eq4Text.setForeground(Color.BLACK);
 				eq4Text.selectAll();
+				lastText = eq4Text.getText();
 			}
 			public void focusLost(FocusEvent e) {
 				if (eq4Text.getText().equals("")) {
 					eq4Text.setText(EQ4HOLDER);
 					eq4Text.setForeground(HOLDER_COLOR);
+				}
+				if (!eq4Text.getText().equalsIgnoreCase(lastText)) {
+					TitledBorder border = ((TitledBorder) graphContentPanel.getBorder());
+					if (!border.getTitle().endsWith(DIRTY_MARKER)) {
+						border.setTitle(border.getTitle() + DIRTY_MARKER);
+						graphContentPanel.repaint();
+					}
 				}
 			}
 		});
@@ -360,11 +404,19 @@ public class CalcSolidsWindow extends JFrame {
 				if (axisText.getText().equals(AXSHOLDER)) axisText.setText("");
 				axisText.setForeground(Color.BLACK);
 				axisText.selectAll();
+				lastText = axisText.getText();
 			}
 			public void focusLost(FocusEvent e) {
 				if (axisText.getText().equals("")) {
 					axisText.setText(AXSHOLDER);
 					axisText.setForeground(HOLDER_COLOR);
+				}
+				if (!axisText.getText().equalsIgnoreCase(lastText)) {
+					TitledBorder border = ((TitledBorder) graphContentPanel.getBorder());
+					if (!border.getTitle().endsWith(DIRTY_MARKER)) {
+						border.setTitle(border.getTitle() + DIRTY_MARKER);
+						graphContentPanel.repaint();
+					}
 				}
 			}
 		});
@@ -434,11 +486,19 @@ public class CalcSolidsWindow extends JFrame {
 				if (heightText.getText().equals(HEIGHTHOLDER)) heightText.setText("");
 				heightText.setForeground(Color.BLACK);
 				heightText.selectAll();
+				lastText = heightText.getText();
 			}
 			public void focusLost(FocusEvent e) {
 				if (heightText.getText().equals("")) {
 					heightText.setText(HEIGHTHOLDER);
 					heightText.setForeground(HOLDER_COLOR);
+				}
+				if (!heightText.getText().equalsIgnoreCase(lastText)) {
+					TitledBorder border = ((TitledBorder) graphContentPanel.getBorder());
+					if (!border.getTitle().endsWith(DIRTY_MARKER)) {
+						border.setTitle(border.getTitle() + DIRTY_MARKER);
+						graphContentPanel.repaint();
+					}
 				}
 			}
 		});
@@ -470,10 +530,10 @@ public class CalcSolidsWindow extends JFrame {
 		solidTabs = new JTabbedPane();
 		solidTabs.addTab("Revolution", null, revPanel, "Create Solids of Revolution");
 		solidTabs.addTab("Known Cross-Section", null, crossPanel, "Create Solids with Known Cross Sections");
-		getContentPane().add(solidTabs);
+		inputPanel.add(solidTabs);
 		
 		JPanel graphPanel = new JPanel(new FlowLayout());
-		getContentPane().add(graphPanel);
+		inputPanel.add(graphPanel);
 		
 		graphEqu = new JButton("Graph Equations");
 		graphEqu.getAccessibleContext().setAccessibleDescription("Graph just the equations and axes");
@@ -494,7 +554,171 @@ public class CalcSolidsWindow extends JFrame {
 		progress.setIndeterminate(false);
 		progress.setString(PROGRESS_READY);
 		progress.setStringPainted(true);
-		getContentPane().add(progress);
+		inputPanel.add(progress);
+		
+		// ==== GRAPH PANEL SETUP ====
+		graphContentPanel = new JPanel(new BorderLayout());
+		graphContentPanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(), "Graph Area"));
+		graphContentPanel.setVisible(false);
+		getContentPane().add(graphContentPanel);
+		
+		graph = new Grapher();
+		graphContentPanel.add(graph, BorderLayout.CENTER);
+		
+		JPanel togglePan = new JPanel(new FlowLayout());
+		togglePan.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Graph Components"));
+		graphContentPanel.add(togglePan, BorderLayout.PAGE_END);
+		
+		JToggleButton axisTg = new JToggleButton("Axes", true);
+		axisTg.getAccessibleContext().setAccessibleDescription("Toggle the axes on or off");
+		axisTg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				graph.toggleAxes();
+			}
+		});
+		togglePan.add(axisTg);
+		
+		JToggleButton polyTg = new JToggleButton("Region", true);
+		polyTg.getAccessibleContext().setAccessibleDescription("Toggle the shaded area on or off");
+		polyTg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				graph.toggleSolid();
+			}
+		});
+		togglePan.add(polyTg);
+		
+		JToggleButton equTg = new JToggleButton("Functions", true);
+		equTg.getAccessibleContext().setAccessibleDescription("Toggle the equations on or off");
+		equTg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				graph.toggleEquations();
+			}
+		});
+		togglePan.add(equTg);
+		
+		JToggleButton shapeTg = new JToggleButton("Rep. Shapes", true);
+		shapeTg.getAccessibleContext().setAccessibleDescription("Toggle the representative shapes on or off");
+		shapeTg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				graph.toggleRepShapes();
+			}
+		});
+		togglePan.add(shapeTg);
+		
+		JToggleButton solidTg = new JToggleButton("Solid", true);
+		solidTg.getAccessibleContext().setAccessibleDescription("Toggle the 3D solid on or off");
+		solidTg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				graph.toggleSolid();
+			}
+		});
+		togglePan.add(solidTg);
+		
+		JToggleButton wireTg = new JToggleButton("Wireframe Solid", true);
+		wireTg.getAccessibleContext().setAccessibleDescription("Toggle the wireframe solid on or off");
+		wireTg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				graph.toggleWireframes();
+			}
+		});
+		togglePan.add(wireTg);
+		
+		JPanel colorRoot = new JPanel();
+		colorRoot.setLayout(new BoxLayout(colorRoot, BoxLayout.PAGE_AXIS));
+		graphContentPanel.add(colorRoot, BorderLayout.LINE_END);
+		
+		JPanel colorPanel = new JPanel();
+		colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.PAGE_AXIS));
+		colorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Colors"));
+		
+		colorRoot.add(Box.createVerticalGlue());
+		colorRoot.add(colorPanel);
+		colorRoot.add(Box.createVerticalGlue());
+
+		JButton viewReset = new JButton("Reset View");
+		viewReset.setAlignmentX(Component.CENTER_ALIGNMENT);
+		viewReset.getAccessibleContext().setAccessibleDescription("Reset the view of the graph");
+		viewReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				graph.resetView();
+			}
+		});
+		colorRoot.add(viewReset);
+		
+		JButton graphHide = new JButton("Hide Graph");
+		graphHide.setAlignmentX(Component.CENTER_ALIGNMENT);
+		graphHide.getAccessibleContext().setAccessibleDescription("Hide the graph");
+		graphHide.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				graphContentPanel.setVisible(false);
+				CalcSolidsWindow.this.pack();
+			}
+		});
+		colorRoot.add(graphHide);
+		
+		JPanel graphLblPanel = new JPanel();
+		graphLblPanel.setLayout(new BoxLayout(graphLblPanel, BoxLayout.PAGE_AXIS));
+		
+		colorPanel.add(Box.createHorizontalGlue());
+		colorPanel.add(graphLblPanel);
+		colorPanel.add(Box.createHorizontalGlue());
+		
+		JLabel xAxisLbl = new JLabel("X Axis");
+		xAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		xAxisLbl.setForeground(CalcConst.X_AXIS);
+		graphLblPanel.add(xAxisLbl);
+		graphLabels.put("xAxis", xAxisLbl);
+		
+		JLabel yAxisLbl = new JLabel("Y Axis");
+		yAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		yAxisLbl.setForeground(CalcConst.Y_AXIS);
+		graphLblPanel.add(yAxisLbl);
+		graphLabels.put("yAxis", yAxisLbl);
+		
+		JLabel zAxisLbl = new JLabel("Z Axis");
+		zAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		zAxisLbl.setForeground(CalcConst.Z_AXIS);
+		graphLblPanel.add(zAxisLbl);
+		graphLabels.put("zAxis", zAxisLbl);
+		
+		JLabel rAxisLbl = new JLabel("Axis of Rev.");
+		rAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		rAxisLbl.setForeground(CalcConst.R_AXIS);
+		graphLblPanel.add(rAxisLbl);
+		graphLabels.put("rAxis", rAxisLbl);
+		
+		JLabel solidLbl = new JLabel("Solid");
+		solidLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		solidLbl.setForeground(CalcConst.SOLID_COLOR);
+		graphLblPanel.add(solidLbl);
+		graphLabels.put("solid", solidLbl);
+		
+		JLabel repRectLbl = new JLabel("Rep. Rect.");
+		repRectLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		repRectLbl.setForeground(CalcConst.RECT_COLOR);
+		graphLblPanel.add(repRectLbl);
+		graphLabels.put("repRect", repRectLbl);
+		
+		JLabel discShellLbl = new JLabel("Discs/Washers/Shells");
+		discShellLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		discShellLbl.setForeground(CalcConst.DISC_SHELL_COLOR);
+		graphLblPanel.add(discShellLbl);
+		graphLabels.put("discs", discShellLbl);
+		
+		JLabel regionLbl = new JLabel("Region");
+		regionLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		regionLbl.setForeground(CalcConst.POLY_COLOR);
+		graphLblPanel.add(regionLbl);
+		graphLabels.put("region", regionLbl);
+		
+		for (int q = 0; q < 4; q++) {
+			JLabel eqLbl = new JLabel("y" + (q + 1) + "(x)");
+			eqLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+			eqLbl.setForeground(CalcConst.EQ_COLOR[q]);
+			graphLblPanel.add(eqLbl);
+			graphLabels.put("eq" + q, eqLbl);
+		}
 	}
 	
 	public void createMenuBar() {
@@ -650,7 +874,7 @@ public class CalcSolidsWindow extends JFrame {
 				helpPane.setContentType("text/html");
 				
 				String helpPath = "Help/";
-				if (CalcConst.RUNNING_FROM_JAR) helpPath = "jar:file:" + CalcConst.JAR_PATH + "!/Help/";
+				if (CalcConst.RUNNING_FROM_JAR) helpPath = "jar:file:" + CalcConst.JAR_PATH + "!/" + helpPath;
 				
 				final URL homeURL = CalcSolidsWindow.class.getResource(helpPath + "general.html");
 				try {
@@ -893,7 +1117,8 @@ public class CalcSolidsWindow extends JFrame {
 		aboutItem.getAccessibleContext().setAccessibleDescription("About this program");
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Calculus 3D Solids v2.0.1 (6020 SLoC)\n" +
+				JOptionPane.showMessageDialog(CalcSolidsWindow.this, 
+						"Calculus 3D Solids v3.0a (6133 SLoC)\n" +
 						"\n" +
 						"Written by: Valera Trubachev\n" + 
 						"   \u00A9 2009-2010\n" + 
@@ -1073,9 +1298,6 @@ public class CalcSolidsWindow extends JFrame {
 	}
 	
 	class EquTask extends SwingWorker<Void, Void> {
-		private AreaGrapher aGraph = null;
-		private JDialog diag = null;
-		
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
 			InitTask init = new InitTask(false);
@@ -1089,127 +1311,40 @@ public class CalcSolidsWindow extends JFrame {
 			catch (InterruptedException eI) { }
 			catch (ExecutionException eE) { }
 			
-			diag = new JDialog(CalcSolidsWindow.this, "2D Graph of Equations");
-			diag.getContentPane().setLayout(new BorderLayout());
+			((TitledBorder) graphContentPanel.getBorder()).setTitle("2D Graph of Equations");
+			graphContentPanel.repaint();
 			
 			setProgressBar("Initializing Graph...");
-			aGraph = new AreaGrapher(initEqus, initAxis, (initSolidRev) ? initAxisY : initSectPerpX);
-			aGraph.getAccessibleContext().setAccessibleDescription("2D Graph of Equations");
+			graph.setupEquGraph(initEqus, initAxis, (initSolidRev) ? initAxisY : initSectPerpX);
+			graph.getAccessibleContext().setAccessibleDescription("2D Graph of Equations");
 			setProgressBar("Adding Equations to Graph");
-			aGraph.addEquations();
+			graph.addEquations();
 			setProgressBar("Adding Axes To Graph");
-			aGraph.addAxes();
+			graph.addAxes();
 			setProgressBar("Graph Creation Complete.");
-			aGraph.resetView();
-			diag.getContentPane().add(aGraph, BorderLayout.CENTER);
+			graph.resetView();
 			
-			JPanel togglePan = new JPanel(new FlowLayout());
-			togglePan.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Graph Components"));
-			diag.getContentPane().add(togglePan, BorderLayout.PAGE_END);
+			for (String lbl : graphLabels.keySet()) graphLabels.get(lbl).setVisible(false);
 			
-			JToggleButton axisTg = new JToggleButton("Axes", true);
-			axisTg.getAccessibleContext().setAccessibleDescription("Toggle the axes on or off");
-			axisTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.toggleAxes();
-				}
-			});
-			togglePan.add(axisTg);
-			
-			JToggleButton equTg = new JToggleButton("Functions", true);
-			equTg.getAccessibleContext().setAccessibleDescription("Toggle the equations on or off");
-			equTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.toggleEquations();
-				}
-			});
-			togglePan.add(equTg);
-			
-			JPanel colorRoot = new JPanel();
-			colorRoot.setLayout(new BoxLayout(colorRoot, BoxLayout.PAGE_AXIS));
-			diag.getContentPane().add(colorRoot, BorderLayout.LINE_END);
-			
-			JPanel colorPanel = new JPanel();
-			colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.PAGE_AXIS));
-			colorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Colors"));
-			
-			colorRoot.add(Box.createVerticalGlue());
-			colorRoot.add(colorPanel);
-			colorRoot.add(Box.createVerticalGlue());
-			
-			JButton viewReset = new JButton("Reset View");
-			viewReset.setAlignmentX(Component.CENTER_ALIGNMENT);
-			viewReset.getAccessibleContext().setAccessibleDescription("Reset the view of the graph");
-			viewReset.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.resetView();
-				}
-			});
-			colorRoot.add(viewReset);
-			
-			Border padding = BorderFactory.createEmptyBorder(2, 0, 3, 0);
-			
-			JLabel xAxisLbl = new JLabel("X Axis");
-			xAxisLbl.setBorder(padding);
-			xAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			xAxisLbl.setForeground(CalcConst.X_AXIS);
-			colorPanel.add(xAxisLbl);
-			
-			JLabel yAxisLbl = new JLabel("Y Axis");
-			yAxisLbl.setBorder(padding);
-			yAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			yAxisLbl.setForeground(CalcConst.Y_AXIS);
-			colorPanel.add(yAxisLbl);
-			
-			if (initAxis != null) {
-				JLabel rAxisLbl = new JLabel("Axis of Rev.");
-				rAxisLbl.setBorder(padding);
-				rAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-				rAxisLbl.setForeground(CalcConst.R_AXIS);
-				colorPanel.add(rAxisLbl);
-			}
+			graphLabels.get("xAxis").setVisible(true);
+			graphLabels.get("yAxis").setVisible(true);
+			if (initAxis != null) graphLabels.get("rAxis").setVisible(true); 
 			
 			for (int q = 0; q < initEqus.length; q++) {
-				JLabel eqLbl = new JLabel((initEqus[q].isEqInX() ? "y" + (q+1) + "(x)" : "x" + (q+1) + "(y)"));
-				eqLbl.setBorder(padding);
-				eqLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-				eqLbl.setForeground(CalcConst.EQ_COLOR[q]);
-				colorPanel.add(eqLbl);
+				JLabel eqLbl = graphLabels.get("eq" + q);
+				eqLbl.setText(initEqus[q].isEqInX() ? "y" + (q + 1) + "(x)" : "x" + (q + 1) + "(y)");
+				eqLbl.setVisible(true);
 			}
-			
-			diag.addWindowListener(new WindowListener() {
-				public void windowClosing(WindowEvent e) {
-					aGraph.cleanup();
-					graphEqu.setEnabled(true);
-					graphEquMenu.setEnabled(true);
-					
-					aGraph = null;
-					diag = null;
-				}
-				public void windowOpened(WindowEvent e) {
-					graphEqu.setEnabled(false);
-					graphEquMenu.setEnabled(false);
-				}
-				public void windowActivated(WindowEvent e) { }
-				public void windowDeactivated(WindowEvent e) { }
-				public void windowIconified(WindowEvent e) { }
-				public void windowDeiconified(WindowEvent e) { }
-				public void windowClosed(WindowEvent e) { }
-			});
-			
-			diag.pack();
+
+			graphContentPanel.setVisible(true);
+			CalcSolidsWindow.this.pack();
 			setProgressBar("Showing Graph.");
-			diag.setVisible(true);
 			setProgressBar(PROGRESS_READY);
 			return null;
 		}
 	}
 	
 	class AreaTask extends SwingWorker<Void, Void> {
-		private AreaGrapher aGraph = null;
-		private JDialog diag = null;
-		private ArrayList<Component> listenClear = new ArrayList<Component>();
-		
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
 			InitTask init = new InitTask(true);
@@ -1223,8 +1358,8 @@ public class CalcSolidsWindow extends JFrame {
 			catch (InterruptedException eI) { }
 			catch (ExecutionException eE) { }
 			
-			diag = new JDialog(CalcSolidsWindow.this, "2D Graph of Area");
-			diag.getContentPane().setLayout(new BorderLayout());
+			((TitledBorder) graphContentPanel.getBorder()).setTitle("2D Graph of Area");
+			graphContentPanel.repaint();
 			
 			GraphType gType;
 			if (initSolidRev) {
@@ -1236,168 +1371,44 @@ public class CalcSolidsWindow extends JFrame {
 			}
 			
 			setProgressBar("Initializing Graph...");
-			aGraph = new AreaGrapher(initPoly, initEqus, (initSolidRev) ? initAxis : null, 
+			graph.setupAreaGraph(initPoly, initEqus, (initSolidRev) ? initAxis : null, 
 					(initSolidRev) ? initAxisY : initSectPerpX, 
 							(initSolidRev) ? initNDiscShell : initNRepShape, gType);
-			aGraph.getAccessibleContext().setAccessibleDescription("2D Graph of Region and Equations");
+			graph.getAccessibleContext().setAccessibleDescription("2D Graph of Region and Equations");
 			setProgressBar("Adding Equations to Graph");
-			aGraph.addEquations();
+			graph.addEquations();
 			setProgressBar("Adding Found Region");
-			aGraph.addFlatPoly();
+			graph.addFlatPoly();
 			setProgressBar("Adding Axes To Graph");
-			aGraph.addAxes();
+			graph.addAxes();
 			setProgressBar("Adding Representative Rectangle");
-			aGraph.addRepShapes();
+			graph.addRepShapes();
 			setProgressBar("Graph Creation Complete.");
-			aGraph.resetView();
-			diag.getContentPane().add(aGraph, BorderLayout.CENTER);
+			graph.resetView();
 			
-			JPanel togglePan = new JPanel(new FlowLayout());
-			togglePan.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Graph Components"));
-			diag.getContentPane().add(togglePan, BorderLayout.PAGE_END);
+			for (String lbl : graphLabels.keySet()) graphLabels.get(lbl).setVisible(false);
 			
-			JToggleButton axisTg = new JToggleButton("Axes", true);
-			axisTg.getAccessibleContext().setAccessibleDescription("Toggle the axes on or off");
-			axisTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.toggleAxes();
-				}
-			});
-			togglePan.add(axisTg);
-			listenClear.add(axisTg);
-			
-			JToggleButton polyTg = new JToggleButton("Region", true);
-			polyTg.getAccessibleContext().setAccessibleDescription("Toggle the shaded area on or off");
-			polyTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.toggleSolid();
-				}
-			});
-			togglePan.add(polyTg);
-			listenClear.add(polyTg);
-			
-			JToggleButton equTg = new JToggleButton("Functions", true);
-			equTg.getAccessibleContext().setAccessibleDescription("Toggle the equations on or off");
-			equTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.toggleEquations();
-				}
-			});
-			togglePan.add(equTg);
-			listenClear.add(equTg);
-			
-			JToggleButton rectTg = new JToggleButton("Rep. Rectangle", true);
-			rectTg.getAccessibleContext().setAccessibleDescription("Toggle the representative rectangle on or off");
-			rectTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.toggleRepShapes();
-				}
-			});
-			togglePan.add(rectTg);
-			listenClear.add(rectTg);
-			
-			JPanel colorRoot = new JPanel();
-			colorRoot.setLayout(new BoxLayout(colorRoot, BoxLayout.PAGE_AXIS));
-			diag.getContentPane().add(colorRoot, BorderLayout.LINE_END);
-			
-			JPanel colorPanel = new JPanel();
-			colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.PAGE_AXIS));
-			colorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Colors"));
-			
-			colorRoot.add(Box.createVerticalGlue());
-			colorRoot.add(colorPanel);
-			colorRoot.add(Box.createVerticalGlue());
-
-			JButton viewReset = new JButton("Reset View");
-			viewReset.setAlignmentX(Component.CENTER_ALIGNMENT);
-			viewReset.getAccessibleContext().setAccessibleDescription("Reset the view of the graph");
-			viewReset.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					aGraph.resetView();
-				}
-			});
-			colorRoot.add(viewReset);
-			listenClear.add(viewReset);
-			
-			Border padding = BorderFactory.createEmptyBorder(2, 0, 3, 0);
-			
-			JLabel xAxisLbl = new JLabel("X Axis");
-			xAxisLbl.setBorder(padding);
-			xAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			xAxisLbl.setForeground(CalcConst.X_AXIS);
-			colorPanel.add(xAxisLbl);
-			
-			JLabel yAxisLbl = new JLabel("Y Axis");
-			yAxisLbl.setBorder(padding);
-			yAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			yAxisLbl.setForeground(CalcConst.Y_AXIS);
-			colorPanel.add(yAxisLbl);
-			
-			if (initSolidRev) {
-				JLabel rAxisLbl = new JLabel("Axis of Rev.");
-				rAxisLbl.setBorder(padding);
-				rAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-				rAxisLbl.setForeground(CalcConst.R_AXIS);
-				colorPanel.add(rAxisLbl);
-			}
-			
-			JLabel repRectLbl = new JLabel("Rep. Rect.");
-			repRectLbl.setBorder(padding);
-			repRectLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			repRectLbl.setForeground(CalcConst.RECT_COLOR);
-			colorPanel.add(repRectLbl);
-			
-			JLabel regionLbl = new JLabel("Region");
-			regionLbl.setBorder(padding);
-			regionLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			regionLbl.setForeground(CalcConst.POLY_COLOR);
-			colorPanel.add(regionLbl);
+			graphLabels.get("xAxis").setVisible(true);
+			graphLabels.get("yAxis").setVisible(true);
+			graphLabels.get("repRect").setVisible(true);
+			graphLabels.get("region").setVisible(true);
+			if (initSolidRev) graphLabels.get("rAxis").setVisible(true); 
 			
 			for (int q = 0; q < initEqus.length; q++) {
-				JLabel eqLbl = new JLabel((initEqus[q].isEqInX() ? "y" + (q+1) + "(x)" : "x" + (q+1) + "(y)"));
-				eqLbl.setBorder(padding);
-				eqLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-				eqLbl.setForeground(CalcConst.EQ_COLOR[q]);
-				colorPanel.add(eqLbl);
+				JLabel eqLbl = graphLabels.get("eq" + q);
+				eqLbl.setText(initEqus[q].isEqInX() ? "y" + (q + 1) + "(x)" : "x" + (q + 1) + "(y)");
+				eqLbl.setVisible(true);
 			}
 			
-			diag.addWindowListener(new WindowListener() {
-				public void windowClosing(WindowEvent e) {
-					aGraph.cleanup();
-					for (Component comp : listenClear) CalcUtils.removeAllListeners(comp);
-					diag.removeAll();
-					
-					aGraph = null;
-					diag = null;
-
-					graph2D.setEnabled(true);
-					graph2DMenu.setEnabled(true);
-				}
-				public void windowOpened(WindowEvent e) {
-					graph2D.setEnabled(false);
-					graph2DMenu.setEnabled(false);
-				}
-				public void windowActivated(WindowEvent e) { }
-				public void windowDeactivated(WindowEvent e) { }
-				public void windowIconified(WindowEvent e) { }
-				public void windowDeiconified(WindowEvent e) { }
-				public void windowClosed(WindowEvent e) { }
-			});
-			
-			diag.pack();
+			graphContentPanel.setVisible(true);
+			CalcSolidsWindow.this.pack();
 			setProgressBar("Showing Graph.");
-			diag.setVisible(true);
 			setProgressBar(PROGRESS_READY);
-			listenClear.add(diag);
-			
 			return null;
 		}
 	}
 	
 	class VolumeTask extends SwingWorker<Void, Void> {
-		private Grapher vGraph = null;
-		private JDialog diag = null;
-		
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
 			InitTask init = new InitTask(true);
@@ -1411,12 +1422,12 @@ public class CalcSolidsWindow extends JFrame {
 			catch (InterruptedException eI) { }
 			catch (ExecutionException eE) { }
 			
-			diag = new JDialog(CalcSolidsWindow.this, "3D Graph of Volume");
-			diag.getContentPane().setLayout(new BorderLayout());
+			((TitledBorder) graphContentPanel.getBorder()).setTitle("3D Graph of Volume");
+			graphContentPanel.repaint();
 			
 			setProgressBar("Initializing Graph...");
 			if (initSolidRev) {
-				vGraph = new VolumeRevGrapher(initPoly, initEqus, initAxis, initAxisY, initNDiscShell, initUseDisc);
+				graph.setupVRevGraph(initPoly, initEqus, initAxis, initAxisY, initNDiscShell, initUseDisc);
 			}
 			else {
 				GraphType gType;
@@ -1442,163 +1453,36 @@ public class CalcSolidsWindow extends JFrame {
 				default:
 					gType = null;
 				}
-				vGraph = new VolumeSectGrapher(initPoly, initEqus, initSectPerpX, initNRepShape, gType);
-				if (gType == GraphType.VOL_SECT_RECTANGLE || gType == GraphType.VOL_SECT_ISO_TRIANGLE)
-					((VolumeSectGrapher) vGraph).setConstantHeight(initHeight);
+				graph.setupVSectGraph(initPoly, initEqus, initHeight, initSectPerpX, initNRepShape, gType);
 			}
-			vGraph.getAccessibleContext().setAccessibleDescription("3D graph of Region and Solid");
+			graph.getAccessibleContext().setAccessibleDescription("3D graph of Region and Solid");
 			setProgressBar("Adding Solid");
-			vGraph.addSolid();
+			graph.addSolid();
 			setProgressBar("Adding Wireframe Solid(s)");
-			vGraph.addWireframes();
+			graph.addWireframes();
 			setProgressBar("Adding Graph Axes");
-			vGraph.addAxes();
+			graph.addAxes();
 			setProgressBar("Adding Original Region");
-			vGraph.addFlatPoly();
+			graph.addFlatPoly();
 			setProgressBar("Graph Creation Complete.");
-			vGraph.resetView();
-			diag.getContentPane().add(vGraph, BorderLayout.CENTER);
+			graph.resetView();
 			
-			JPanel togglePan = new JPanel(new FlowLayout());
-			togglePan.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Graph Components"));
-			diag.getContentPane().add(togglePan, BorderLayout.PAGE_END);
+			for (String lbl : graphLabels.keySet()) graphLabels.get(lbl).setVisible(false);
 			
-			JToggleButton axisTg = new JToggleButton("Axes", true);
-			axisTg.getAccessibleContext().setAccessibleDescription("Toggle the axes on or off");
-			axisTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					vGraph.toggleAxes();
-				}
-			});
-			togglePan.add(axisTg);
+			graphLabels.get("xAxis").setVisible(true);
+			graphLabels.get("yAxis").setVisible(true);
+			graphLabels.get("zAxis").setVisible(true);
+			graphLabels.get("solid").setVisible(true);
+			if (initSolidRev) graphLabels.get("rAxis").setVisible(true); 
 			
-			JToggleButton polyTg = new JToggleButton("Region", true);
-			polyTg.getAccessibleContext().setAccessibleDescription("Toggle the outline of the region on or off");
-			polyTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					vGraph.toggleFlatPoly();
-				}
-			});
-			togglePan.add(polyTg);
+			JLabel discLbl = graphLabels.get("discs");
+			discLbl.setText((initUseDisc) ? "Discs/Washers" : "Shells");
+			discLbl.setVisible(true);
 			
-			JToggleButton solidTg = new JToggleButton("Solid", true);
-			solidTg.getAccessibleContext().setAccessibleDescription("Toggle the 3D solid on or off");
-			solidTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					vGraph.toggleSolid();
-				}
-			});
-			togglePan.add(solidTg);
-			
-			JToggleButton wireTg = new JToggleButton("Wireframe Solid", true);
-			wireTg.getAccessibleContext().setAccessibleDescription("Toggle the wireframe solid on or off");
-			wireTg.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					vGraph.toggleWireframes();
-				}
-			});
-			togglePan.add(wireTg);
-			
-			if (initSolidRev) {
-				JToggleButton discTg = new JToggleButton((initUseDisc) ? "Discs/Washers" : "Shells", false);
-				discTg.getAccessibleContext().setAccessibleDescription("Toggle the " + ((initUseDisc) ? "Discs/Washers" : "Shells") + " on or off");
-				discTg.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						vGraph.toggleRepShapes();
-					}
-				});
-				togglePan.add(discTg);
-			}
-			
-			JPanel colorRoot = new JPanel();
-			colorRoot.setLayout(new BoxLayout(colorRoot, BoxLayout.PAGE_AXIS));
-			diag.getContentPane().add(colorRoot, BorderLayout.LINE_END);
-			
-			JPanel colorPanel = new JPanel();
-			colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.PAGE_AXIS));
-			colorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Colors"));
-
-			colorRoot.add(Box.createVerticalGlue());
-			colorRoot.add(colorPanel);
-			colorRoot.add(Box.createVerticalGlue());
-			
-			JButton viewReset = new JButton("Reset View");
-			viewReset.setAlignmentX(Component.CENTER_ALIGNMENT);
-			viewReset.getAccessibleContext().setAccessibleDescription("Reset the view of the graph");
-			viewReset.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					vGraph.resetView();
-				}
-			});
-			colorRoot.add(viewReset);
-			
-			Border padding = BorderFactory.createEmptyBorder(2, 0, 3, 0);
-			
-			JLabel xAxisLbl = new JLabel("X Axis");
-			xAxisLbl.setBorder(padding);
-			xAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			xAxisLbl.setForeground(CalcConst.X_AXIS);
-			colorPanel.add(xAxisLbl);
-			
-			JLabel yAxisLbl = new JLabel("Y Axis");
-			yAxisLbl.setBorder(padding);
-			yAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			yAxisLbl.setForeground(CalcConst.Y_AXIS);
-			colorPanel.add(yAxisLbl);
-			
-			JLabel zAxisLbl = new JLabel("Z Axis");
-			zAxisLbl.setBorder(padding);
-			zAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			zAxisLbl.setForeground(CalcConst.Z_AXIS);
-			colorPanel.add(zAxisLbl);
-			
-			if (initSolidRev) {
-				JLabel rAxisLbl = new JLabel("Axis of Rev.");
-				rAxisLbl.setBorder(padding);
-				rAxisLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-				rAxisLbl.setForeground(CalcConst.R_AXIS);
-				colorPanel.add(rAxisLbl);
-			}
-			
-			JLabel solidLbl = new JLabel("Solid");
-			solidLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-			solidLbl.setBorder(padding);
-			solidLbl.setForeground(CalcConst.SOLID_COLOR);
-			colorPanel.add(solidLbl);
-			
-			if (initSolidRev) {
-				JLabel discShellLbl = new JLabel((initUseDisc) ? "Discs/Washers" : "Shells");
-				discShellLbl.setBorder(padding);
-				discShellLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-				discShellLbl.setForeground(CalcConst.DISC_SHELL_COLOR);
-				colorPanel.add(discShellLbl);
-			}
-			
-			diag.addWindowListener(new WindowListener() {
-				public void windowClosing(WindowEvent e) {
-					vGraph.cleanup();
-					graph3D.setEnabled(true);
-					graph3DMenu.setEnabled(true);
-					
-					vGraph = null;
-					diag = null;
-				}
-				public void windowOpened(WindowEvent e) {
-					graph3D.setEnabled(false);
-					graph3DMenu.setEnabled(false);
-				}
-				public void windowActivated(WindowEvent e) { }
-				public void windowDeactivated(WindowEvent e) { }
-				public void windowIconified(WindowEvent e) { }
-				public void windowDeiconified(WindowEvent e) { }
-				public void windowClosed(WindowEvent e) { }
-			});
-			
-			diag.pack();
+			graphContentPanel.setVisible(true);
+			CalcSolidsWindow.this.pack();
 			setProgressBar("Showing Graph.");
-			diag.setVisible(true);
 			setProgressBar(PROGRESS_READY);
-			
 			return null;
 		}
 	}
@@ -1668,6 +1552,7 @@ public class CalcSolidsWindow extends JFrame {
 				JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Not all selected equations have been entered!", "Missing Equations", JOptionPane.ERROR_MESSAGE);
 				return FALSE;
 			}
+			
 			boolean axisEntered = true;
 			if (solidOfRev) {
 				if (axisText.getText().equals(AXSHOLDER)) {
@@ -1787,6 +1672,7 @@ public class CalcSolidsWindow extends JFrame {
 				return TRUE;
 			}
 			
+			PolygonBig poly = null;
 			PolygonBuilder polyBuild;
 			try {
 				polyBuild = new PolygonBuilder(equs);
@@ -1802,7 +1688,7 @@ public class CalcSolidsWindow extends JFrame {
 				JOptionPane.showMessageDialog(CalcSolidsWindow.this, ePB.getMessage(), "Error Building Polygon", JOptionPane.ERROR_MESSAGE);
 				return FALSE;
 			}
-			PolygonBig poly = polyBuild.getPoly();
+			poly = polyBuild.getPoly();
 			
 			if (solidOfRev) {
 				setProgressBar("Checking Region vs. Axis");
@@ -1835,8 +1721,8 @@ public class CalcSolidsWindow extends JFrame {
 				
 				initSectPerpX = sectPerpX.isSelected();
 				initNRepShape = nModel.getNumber().intValue();
-				initSectType = sect;
 				initHeight = heightVal;
+				initSectType = sect;
 			}
 			return TRUE;
 		}
