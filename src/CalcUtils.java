@@ -3,6 +3,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.util.*;
+
 import javax.swing.ImageIcon;
 
 import java.awt.Component;
@@ -299,7 +300,7 @@ public class CalcUtils {
 		}
 	}
 	
-	
+	@SuppressWarnings("unchecked")
 	public static void removeAllListeners(Component comp) {
 		Method[] methods = comp.getClass().getMethods();
 		for (int q = 0; q < methods.length; q++) {
