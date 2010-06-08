@@ -1,17 +1,38 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.math.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.media.j3d.Appearance;
+import javax.media.j3d.BoundingBox;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Canvas3D;
+import javax.media.j3d.ColoringAttributes;
+import javax.media.j3d.ImageComponent;
+import javax.media.j3d.ImageComponent2D;
+import javax.media.j3d.LineStripArray;
+import javax.media.j3d.PolygonAttributes;
+import javax.media.j3d.Raster;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.media.j3d.TransparencyAttributes;
 import javax.swing.JPanel;
-import javax.vecmath.*;
-import javax.media.j3d.*;
+import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
+import javax.vecmath.Vector3d;
 
-import com.sun.j3d.utils.universe.*;
-import com.sun.j3d.utils.behaviors.vp.*;
+import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.Sphere;
+import com.sun.j3d.utils.universe.SimpleUniverse;
+import com.sun.j3d.utils.universe.ViewingPlatform;
 
 public class Grapher extends JPanel {
 	private static final long serialVersionUID = -8262263806408076517L;
@@ -228,6 +249,17 @@ public class Grapher extends JPanel {
 	 */
 	public void resetView() {
 		orbit.goHome();
+	}
+	
+	public BufferedImage captureImg() {
+		BufferedImage buf = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+		ImageComponent2D img2d = new ImageComponent2D(ImageComponent.FORMAT_RGB, buf);
+		
+		Raster ras = new Raster(new Point3f(-1.0f, -1.0f, -1.0f), 
+				Raster.RASTER_COLOR, 0, 0, getWidth(), getHeight(), img2d, null);
+		universe.getCanvas().getGraphicsContext3D().readRaster(ras);
+		
+		return ras.getImage().getImage();
 	}
 	
 	/**

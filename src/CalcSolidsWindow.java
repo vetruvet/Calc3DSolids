@@ -11,23 +11,84 @@
  * for the development of this program.
  */
 
-import java.io.*;
-import java.awt.*;
-import java.net.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import javax.swing.event.*;
-import javax.swing.border.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import javax.swing.filechooser.*;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class CalcSolidsWindow extends JFrame {
 	private static final long serialVersionUID = 3947075375906163527L;
@@ -167,9 +228,9 @@ public class CalcSolidsWindow extends JFrame {
 		CSW.createGUI();
 		CSW.createMenuBar();
 		CSW.pack();
-		CSW.setResizable(true);
+		CSW.setResizable(false);
 		CSW.setVisible(true);
-		CSW.setMinimumSize(CSW.getSize());
+		//CSW.setMinimumSize(CSW.getSize());
 		
 		CSW.addWindowListener(new WindowListener() {
 			public void windowClosing(WindowEvent e) {
@@ -856,6 +917,68 @@ public class CalcSolidsWindow extends JFrame {
 		graph3DMenu.addActionListener(G3D_LISTEN);
 		graphMenu.add(graph3DMenu);
 		
+		graphMenu.addSeparator();
+		
+		JMenuItem captureItem = new JMenuItem("Save Graph");
+		captureItem.getAccessibleContext().setAccessibleDescription("Save the image currently displayed by the graph");
+		captureItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK));
+		captureItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					JFileChooser fc;
+					if (lastPath == null) fc = new JFileChooser();
+					else fc = new JFileChooser(lastPath);
+					
+					fc.setMultiSelectionEnabled(false);
+					fc.setDialogTitle("Save Graph Image");
+					fc.setAcceptAllFileFilterUsed(false);
+					
+					FileNameExtensionFilter[] filters = new FileNameExtensionFilter[] {
+							new FileNameExtensionFilter("All Images", "jpg", "gif", "bmp", "png"),
+							new FileNameExtensionFilter("PNG Files", "png"),
+							new FileNameExtensionFilter("JPEG Files", "jpg"),
+							new FileNameExtensionFilter("GIF Files", "gif"),
+							new FileNameExtensionFilter("BMP Files", "bmp"),
+					};
+					for (FileNameExtensionFilter filter : filters) fc.addChoosableFileFilter(filter);
+					fc.setFileFilter(filters[1]);
+					
+					if (fc.showSaveDialog(CalcSolidsWindow.this) == JFileChooser.APPROVE_OPTION) {
+						String filePath = fc.getSelectedFile().getAbsolutePath();
+						
+						BufferedImage img = graph.captureImg();
+						if (filePath.endsWith(".png") || fc.getFileFilter() == filters[1]) {
+							if (!filePath.endsWith(".png")) filePath += ".png";
+							ImageIO.write(img, "png", new File(filePath));
+						}
+						else if (filePath.endsWith(".jpg") || fc.getFileFilter() == filters[2]) {
+							if (!filePath.endsWith(".jpg")) filePath += ".jpg";
+							ImageIO.write(img, "jpg", new File(filePath));
+						}
+						else if (filePath.endsWith(".gif") || fc.getFileFilter() == filters[3]) {
+							if (!filePath.endsWith(".gif")) filePath += ".gif";
+							ImageIO.write(img, "gif", new File(filePath));
+						}
+						else if (filePath.endsWith(".bmp") || fc.getFileFilter() == filters[4]) {
+							if (!filePath.endsWith(".mbp")) filePath += ".bmp";
+							ImageIO.write(img, "bmp", new File(filePath));
+						}
+						else {
+							JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Invalid file type for saving!", 
+									"Bad File Type", JOptionPane.ERROR_MESSAGE);
+						}
+						
+						lastPath = fc.getCurrentDirectory();
+					}
+				}
+				catch (IOException eIO) {
+					JOptionPane.showMessageDialog(CalcSolidsWindow.this, "An Error occurred while writing the image!",
+							"Error Writing Image", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		graphMenu.add(captureItem);
+		
 		rootBar.add(Box.createHorizontalGlue());
 		
 		JMenu helpMenu = new JMenu("Help");
@@ -1118,7 +1241,7 @@ public class CalcSolidsWindow extends JFrame {
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(CalcSolidsWindow.this, 
-						"Calculus 3D Solids v3.0a (6133 SLoC)\n" +
+						"Calculus 3D Solids v2.9.9b (6284 SLoC)\n" +
 						"\n" +
 						"Written by: Valera Trubachev\n" + 
 						"   \u00A9 2009-2010\n" + 
