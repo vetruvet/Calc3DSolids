@@ -52,7 +52,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -121,13 +120,6 @@ public class CalcSolidsWindow extends JFrame {
 	private JPanel graphContentPanel;
 	private Grapher graph;
 	private HashMap<String, JLabel> graphLabels = new HashMap<String, JLabel>();
-	
-	private PolygonBig initPoly;
-	private BigDecimal initAxis, initHeight;
-	private boolean initAxisY, initUseDisc, initSolidRev, initSectPerpX;
-	private Equation[] initEqus;
-	private CrossSectionType initSectType;
-	private int initNDiscShell, initNRepShape;
 	
 	private final ActionListener EQU_LISTEN = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -228,9 +220,9 @@ public class CalcSolidsWindow extends JFrame {
 		CSW.createGUI();
 		CSW.createMenuBar();
 		CSW.pack();
+		CSW.setMinimumSize(CSW.getSize());
 		CSW.setResizable(false);
 		CSW.setVisible(true);
-		//CSW.setMinimumSize(CSW.getSize());
 		
 		CSW.addWindowListener(new WindowListener() {
 			public void windowClosing(WindowEvent e) {
@@ -616,6 +608,8 @@ public class CalcSolidsWindow extends JFrame {
 		progress.setString(PROGRESS_READY);
 		progress.setStringPainted(true);
 		inputPanel.add(progress);
+		
+		inputPanel.setMinimumSize(inputPanel.getSize());
 		
 		// ==== GRAPH PANEL SETUP ====
 		graphContentPanel = new JPanel(new BorderLayout());
@@ -1214,7 +1208,7 @@ public class CalcSolidsWindow extends JFrame {
 							}
 						}
 						else {
-							JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Please click \"Update\" when you are ready to update", "Update Postponed", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Please select \"Update\" from the menu\nwhen you are ready to update", "Update Postponed", JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 					else {
@@ -1241,7 +1235,7 @@ public class CalcSolidsWindow extends JFrame {
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(CalcSolidsWindow.this, 
-						"Calculus 3D Solids v2.9.9b (6284 SLoC)\n" +
+						"Calculus 3D Solids v2.9.9b (6274 SLoC)\n" +
 						"\n" +
 						"Written by: Valera Trubachev\n" + 
 						"   \u00A9 2009-2010\n" + 
@@ -1420,19 +1414,13 @@ public class CalcSolidsWindow extends JFrame {
 		SwingUtilities.invokeLater(new ProgRun(newText));
 	}
 	
-	class EquTask extends SwingWorker<Void, Void> {
+	private class EquTask extends GraphTask {
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
-			InitTask init = new InitTask(false);
-			init.execute();
-			try {
-				if (!init.get().booleanValue()) {
-					setProgressBar(PROGRESS_READY);
-					return null;
-				}
+			if (!init(false)) {
+				setProgressBar(PROGRESS_READY);
+				return null;
 			}
-			catch (InterruptedException eI) { }
-			catch (ExecutionException eE) { }
 			
 			((TitledBorder) graphContentPanel.getBorder()).setTitle("2D Graph of Equations");
 			graphContentPanel.repaint();
@@ -1467,19 +1455,13 @@ public class CalcSolidsWindow extends JFrame {
 		}
 	}
 	
-	class AreaTask extends SwingWorker<Void, Void> {
+	private class AreaTask extends GraphTask {
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
-			InitTask init = new InitTask(true);
-			init.execute();
-			try {
-				if (!init.get().booleanValue()) {
-					setProgressBar(PROGRESS_READY);
-					return null;
-				}
+			if (!init(true)) {
+				setProgressBar(PROGRESS_READY);
+				return null;
 			}
-			catch (InterruptedException eI) { }
-			catch (ExecutionException eE) { }
 			
 			((TitledBorder) graphContentPanel.getBorder()).setTitle("2D Graph of Area");
 			graphContentPanel.repaint();
@@ -1531,19 +1513,13 @@ public class CalcSolidsWindow extends JFrame {
 		}
 	}
 	
-	class VolumeTask extends SwingWorker<Void, Void> {
+	private class VolumeTask extends GraphTask {
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
-			InitTask init = new InitTask(true);
-			init.execute();
-			try {
-				if (!init.get().booleanValue()) {
-					setProgressBar(PROGRESS_READY);
-					return null;
-				}
+			if (!init(true)) {
+				setProgressBar(PROGRESS_READY);
+				return null;
 			}
-			catch (InterruptedException eI) { }
-			catch (ExecutionException eE) { }
 			
 			((TitledBorder) graphContentPanel.getBorder()).setTitle("3D Graph of Volume");
 			graphContentPanel.repaint();
@@ -1610,17 +1586,15 @@ public class CalcSolidsWindow extends JFrame {
 		}
 	}
 	
-	class InitTask extends SwingWorker<Boolean, Void> {
-		private final Boolean FALSE = new Boolean(false);
-		private final Boolean TRUE = new Boolean(true);
-		private final boolean REGION;
+	private abstract class GraphTask extends SwingWorker<Void, Void> {
+		protected PolygonBig initPoly;
+		protected BigDecimal initAxis, initHeight;
+		protected boolean initAxisY, initUseDisc, initSolidRev, initSectPerpX;
+		protected Equation[] initEqus;
+		protected CrossSectionType initSectType;
+		protected int initNDiscShell, initNRepShape;
 		
-		public InitTask(boolean findReg) {
-			super();
-			REGION = findReg;
-		}
-		
-		protected Boolean doInBackground() {
+		protected boolean init(boolean findRegion) {
 			boolean solidOfRev = solidTabs.getSelectedIndex() == 0;
 			
 			CrossSectionType sect = null;
@@ -1638,7 +1612,7 @@ public class CalcSolidsWindow extends JFrame {
 					sect = CrossSectionType.ISO_TRIANGLE;
 				else if (shapeSelect.equals(CalcUtils.crossSectShapeAsStr(CrossSectionType.RECTANGLE))) 
 					sect = CrossSectionType.RECTANGLE;
-				else return FALSE;	
+				else return false;	
 			}
 			
 			int nEqUsed = 0;
@@ -1648,9 +1622,9 @@ public class CalcSolidsWindow extends JFrame {
 			if (useEq4.isSelected()) nEqUsed++;
 			
 			setProgressBar("Checking Input");
-			if (nEqUsed < ((REGION) ? 2 : 1)) {
-				JOptionPane.showMessageDialog(CalcSolidsWindow.this, "At least " + ((REGION) ? "2" : "1") + " functions need to be used!", "Select Functions", JOptionPane.ERROR_MESSAGE);
-				return FALSE;
+			if (nEqUsed < ((findRegion) ? 2 : 1)) {
+				JOptionPane.showMessageDialog(CalcSolidsWindow.this, "At least " + ((findRegion) ? "2" : "1") + " functions need to be used!", "Select Functions", JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
 			
 			String[] eqTextInput = new String[] { eq1Text.getText(),
@@ -1673,16 +1647,16 @@ public class CalcSolidsWindow extends JFrame {
 			if ((eq4Text.getText().equals(EQ4HOLDER) && useEq4.isSelected())) missEq = true;
 			if (missEq) {
 				JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Not all selected equations have been entered!", "Missing Equations", JOptionPane.ERROR_MESSAGE);
-				return FALSE;
+				return false;
 			}
 			
 			boolean axisEntered = true;
 			if (solidOfRev) {
 				if (axisText.getText().equals(AXSHOLDER)) {
 					axisEntered = false;
-					if (REGION) {
+					if (findRegion) {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Axis value not entered!", "Missing Axis", JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 				}
 			}
@@ -1690,7 +1664,7 @@ public class CalcSolidsWindow extends JFrame {
 				if (sect == CrossSectionType.RECTANGLE || sect == CrossSectionType.ISO_TRIANGLE) {
 					if (heightText.getText().equals(HEIGHTHOLDER)) {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Constant height not entered!", "Missing Height", JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 				}
 			}
@@ -1715,7 +1689,7 @@ public class CalcSolidsWindow extends JFrame {
 				}
 				catch (FunctionParseException eFP) {
 					JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Syntax error in function " + (q + 1), "Syntax Error", JOptionPane.ERROR_MESSAGE);
-					return FALSE;
+					return false;
 				}
 			}
 			
@@ -1733,13 +1707,13 @@ public class CalcSolidsWindow extends JFrame {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this, 
 								"Error in axis value!", "Invalid Axis Value", 
 								JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 					if (!axisEq.getRootOp().isConstant()) {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this, 
 								"Error in axis value!", "Invalid Axis Value", 
 								JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 					try {
 						axisVal = axisEq.eval(BigDecimal.ZERO);
@@ -1748,7 +1722,7 @@ public class CalcSolidsWindow extends JFrame {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this, 
 								"Error in axis value!", "Invalid Axis Value",
 								JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 				}
 			}
@@ -1762,13 +1736,13 @@ public class CalcSolidsWindow extends JFrame {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this,
 								"Error in constant height!", "Invalid Height",
 								JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 					if (!heightEq.getRootOp().isConstant()) {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this,
 								"Error in constant height!", "Invalid Height",
 								JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 					try {
 						heightVal = heightEq.eval(BigDecimal.ZERO);
@@ -1776,12 +1750,12 @@ public class CalcSolidsWindow extends JFrame {
 						JOptionPane.showMessageDialog(CalcSolidsWindow.this,
 								"Error in constant height!", "Invalid Height",
 								JOptionPane.ERROR_MESSAGE);
-						return FALSE;
+						return false;
 					}
 				}
 			}
 			
-			if (!REGION) {
+			if (!findRegion) {
 				initEqus = equs;
 				initSolidRev = solidOfRev;
 				if (solidOfRev) {
@@ -1792,7 +1766,7 @@ public class CalcSolidsWindow extends JFrame {
 					}
 					else initAxis = null;
 				}
-				return TRUE;
+				return true;
 			}
 			
 			PolygonBig poly = null;
@@ -1801,7 +1775,7 @@ public class CalcSolidsWindow extends JFrame {
 				polyBuild = new PolygonBuilder(equs);
 			}
 			catch (IllegalArgumentException eIA) {
-				return FALSE;
+				return false;
 			}
 			setProgressBar("Finding Region");
 			try {
@@ -1809,7 +1783,7 @@ public class CalcSolidsWindow extends JFrame {
 			}
 			catch (PolygonBuildException ePB) {
 				JOptionPane.showMessageDialog(CalcSolidsWindow.this, ePB.getMessage(), "Error Building Polygon", JOptionPane.ERROR_MESSAGE);
-				return FALSE;
+				return false;
 			}
 			poly = polyBuild.getPoly();
 			
@@ -1824,7 +1798,7 @@ public class CalcSolidsWindow extends JFrame {
 				}
 				if (axisCross) {
 					JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Axis intersects polygon!", "Invalid axis value", JOptionPane.ERROR_MESSAGE);
-					return FALSE;
+					return false;
 				}
 			}
 			
@@ -1847,11 +1821,11 @@ public class CalcSolidsWindow extends JFrame {
 				initHeight = heightVal;
 				initSectType = sect;
 			}
-			return TRUE;
+			return true;
 		}
 	}
 
-	static class LoaderTask extends SwingWorker<Void, Void> {
+	protected static class LoaderTask extends SwingWorker<Void, Void> {
 		private final JDialog PROG_DIAG;
 		private final NativeLibLoader LOADER;
 		
@@ -1878,7 +1852,7 @@ public class CalcSolidsWindow extends JFrame {
 		}
 	}
 	
-	class ProgRun implements Runnable {
+	private class ProgRun implements Runnable {
 		private final String NEW_STR;
 		private final boolean INDET;
 		
@@ -1890,8 +1864,28 @@ public class CalcSolidsWindow extends JFrame {
 		public void run() {
 			progress.setString(NEW_STR);
 			progress.setIndeterminate(INDET);
-			if (INDET) setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			else setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if (INDET) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				
+				graph2D.setEnabled(false);
+				graph3D.setEnabled(false);
+				graphEqu.setEnabled(false);
+				
+				graph2DMenu.setEnabled(false);
+				graph3DMenu.setEnabled(false);
+				graphEquMenu.setEnabled(false);
+			}
+			else {
+				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				
+				graph2D.setEnabled(true);
+				graph3D.setEnabled(true);
+				graphEqu.setEnabled(true);
+				
+				graph2DMenu.setEnabled(true);
+				graph3DMenu.setEnabled(true);
+				graphEquMenu.setEnabled(true);
+			}
 		}
 	}
 }
