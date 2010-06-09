@@ -11,16 +11,19 @@ import java.util.ArrayList;
  *
  */
 public final class NativeLibLoader {
-	private static final String[] WIN_LIBS = new String[] { "lib/j3dcore-d3d.dll",
-		/*"lib/j3dcore-ogl-cg.dll",*/
-		"lib/j3dcore-ogl-chk.dll",
-		"lib/j3dcore-ogl.dll" };
+	private static final String[] WIN32_LIBS = new String[] { "lib/j3dcore-d3d.dll.x32",
+		/*"lib/j3dcore-ogl-cg.dll.x32",*/ 	//don't ask why, but this one doesn't load, 
+											//and its absense doesn't cause any problems
+		"lib/j3dcore-ogl-chk.dll.x32",
+		"lib/j3dcore-ogl.dll.x32" };
+	private static final String[] WIN64_LIBS = new String[] { "lib/j3dcore-ogl.dll.x64" };
 	private static final String[] LINUX_LIBS_32 = new String[] { "lib/libj3dcore-ogl.so.x32",
 		"lib/libj3dcore-ogl-cg.so.x32" };
 	private static final String[] LINUX_LIBS_64 = new String[] { "lib/libj3dcore-ogl.so.x64",
 		"lib/libj3dcore-ogl-cg.so.x64" };
 	
-	private static final int[] WIN_LIB_SIZE = new int[] { 823296, /*40960,*/ 49152, 163840 };
+	private static final int[] WIN32_LIB_SIZE = new int[] { 823296, /*40960,*/ 49152, 163840 };
+	private static final int[] WIN64_LIB_SIZE = new int[] { 229376 };
 	private static final int[] LINUX_LIB_32_SIZE = new int[] { 159428, 5274 };
 	private static final int[] LINUX_LIB_64_SIZE = new int[] { 158113, 11359 };
 	
@@ -30,7 +33,6 @@ public final class NativeLibLoader {
 	private final OSType OS;
 	
 	private static NativeLibLoader instance = null;
-	
 	
 	/**
 	 * @return
@@ -54,11 +56,14 @@ public final class NativeLibLoader {
 	/**
 	 * @throws UnsupportedOSException
 	 */
-	public void loadLibs() throws UnsupportedOSException {
+	public synchronized void loadLibs() throws UnsupportedOSException {
 		String[] libs;
 		switch (OS) {
-		case WINDOWS:
-			libs = WIN_LIBS;
+		case WINDOWS32:
+			libs = WIN32_LIBS;
+			break;
+		case WINDOWS64:
+			libs = WIN64_LIBS;
 			break;
 		case LINUX32:
 		case UNIX32:
@@ -82,11 +87,14 @@ public final class NativeLibLoader {
 	/**
 	 * @return
 	 */
-	public boolean unloadLibs() {
+	public synchronized boolean unloadLibs() {
 		String[] libs;
 		switch (OS) {
-		case WINDOWS:
-			libs = WIN_LIBS;
+		case WINDOWS32:
+			libs = WIN32_LIBS;
+			break;
+		case WINDOWS64:
+			libs = WIN64_LIBS;
 			break;
 		case LINUX32:
 		case UNIX32:
@@ -113,7 +121,7 @@ public final class NativeLibLoader {
 	 * @param paths
 	 * @return
 	 */
-	public boolean unloadLibs(String[] paths) {
+	public synchronized boolean unloadLibs(String[] paths) {
 		try { Thread.sleep(1000); } catch (InterruptedException e) { }
 		for (String lib : paths) {
 			if (!unloadLib(lib)) 
@@ -126,7 +134,7 @@ public final class NativeLibLoader {
 	 * @param path
 	 * @return
 	 */
-	private boolean loadLib(String path) {
+	private synchronized boolean loadLib(String path) {
 		String libName = path.substring(path.lastIndexOf('/') + 1).replaceFirst("\\.x((32)|(64))$$", "");
 		InputStream is = getClass().getClassLoader().getResourceAsStream(path);
 		if (is == null) return false;
@@ -137,7 +145,7 @@ public final class NativeLibLoader {
 			BufferedInputStream in = new BufferedInputStream(is);
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(libName));
 			
-			byte[] buf = new byte[2048];
+			byte[] buf = new byte[4096];
 			int nRead = -1;
 			while ((nRead = in.read(buf)) != -1) {
 				bytesCopied += nRead;
@@ -151,7 +159,7 @@ public final class NativeLibLoader {
 			out.flush();
 			out.close();
 			
-			//System.load(libFile.getAbsolutePath());
+			System.load(libFile.getAbsolutePath());
 			loadedLibs.add(libFile.getAbsolutePath());
 			
 			libFile.deleteOnExit();
@@ -173,7 +181,7 @@ public final class NativeLibLoader {
 	 * @param path
 	 * @return
 	 */
-	private boolean unloadLib(String path) {
+	private synchronized boolean unloadLib(String path) {
 		return CalcUtils.deleteWithRetry(path, 250, 8);
 	}
 	
@@ -183,8 +191,11 @@ public final class NativeLibLoader {
 	public int getNBytes() {
 		int[] sizes;
 		switch (OS) {
-		case WINDOWS:
-			sizes = WIN_LIB_SIZE;
+		case WINDOWS32:
+			sizes = WIN32_LIB_SIZE;
+			break;
+		case WINDOWS64:
+			sizes = WIN64_LIB_SIZE;
 			break;
 		case LINUX32:
 		case UNIX32:
@@ -214,19 +225,20 @@ public final class NativeLibLoader {
 		
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.indexOf("win") != -1) {
-			return OSType.WINDOWS;
+			if (is64bit) 	return OSType.WINDOWS64;
+			else 			return OSType.WINDOWS32;
 		}
 		if (os.indexOf("mac") != -1) {
-			if (is64bit) return OSType.MAC64;
-			else return OSType.MAC32;
+			if (is64bit) 	return OSType.MAC64;
+			else 			return OSType.MAC32;
 		}
 		if (os.indexOf("nix") != -1) {
-			if (is64bit) return OSType.UNIX64;
-			else return OSType.UNIX32;
+			if (is64bit) 	return OSType.UNIX64;
+			else 			return OSType.UNIX32;
 		}
 		if (os.indexOf("nux") != -1) {
-			if (is64bit) return OSType.LINUX64;
-			else return OSType.LINUX32;
+			if (is64bit) 	return OSType.LINUX64;
+			else 			return OSType.LINUX32;
 		}
 		return OSType.OTHER;
 	}
@@ -247,5 +259,5 @@ public final class NativeLibLoader {
 }
 
 enum OSType {
-	WINDOWS, LINUX32, LINUX64, MAC32, MAC64, UNIX32, UNIX64, OTHER
+	WINDOWS32, WINDOWS64, LINUX32, LINUX64, MAC32, MAC64, UNIX32, UNIX64, OTHER
 }
