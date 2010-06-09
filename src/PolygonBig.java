@@ -1,5 +1,6 @@
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PolygonBig {
 	private ArrayList<Point2DBig> ptList = new ArrayList<Point2DBig>();

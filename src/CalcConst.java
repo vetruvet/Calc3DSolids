@@ -2,11 +2,13 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public final class CalcConst {
-	public static final String UPDATE_LOCATION = "http://c3s.vetruvet.co.cc/";
+	public static final String UPDATE_LOCATION = "http://sites.google.com/site/vetruvet/c3s/";
 	
 	public static final String JAVA_BIN_PATH = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 	public static final String CURRENT_DIR;

@@ -1,14 +1,15 @@
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.*;
-import java.math.BigDecimal;
-import java.util.*;
-
-import javax.swing.ImageIcon;
-
 import java.awt.Component;
 import java.awt.Image;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.Iterator;
+
+import javax.swing.ImageIcon;
 
 public class CalcUtils {
 	private static final byte[] HEX_CHAR_TBL = new byte[] {(byte) '0', (byte) '1', (byte) '2', (byte) '3', 

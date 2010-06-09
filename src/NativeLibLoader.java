@@ -1,4 +1,9 @@
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -146,7 +151,7 @@ public final class NativeLibLoader {
 			out.flush();
 			out.close();
 			
-			System.load(libFile.getAbsolutePath());
+			//System.load(libFile.getAbsolutePath());
 			loadedLibs.add(libFile.getAbsolutePath());
 			
 			libFile.deleteOnExit();
@@ -208,7 +213,9 @@ public final class NativeLibLoader {
 		boolean is64bit = System.getProperty("os.arch").indexOf("64") != -1;
 		
 		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("win") != -1) return OSType.WINDOWS;
+		if (os.indexOf("win") != -1) {
+			return OSType.WINDOWS;
+		}
 		if (os.indexOf("mac") != -1) {
 			if (is64bit) return OSType.MAC64;
 			else return OSType.MAC32;

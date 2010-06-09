@@ -1,8 +1,14 @@
-import java.math.*;
-import javax.vecmath.*;
-import javax.media.j3d.*;
-import java.util.*;
-import static java.lang.Math.*;
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+
+import javax.media.j3d.LineStripArray;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.TriangleStripArray;
+import javax.vecmath.Point3d;
 
 public class SolidMaker {
 	public static Shape3D rotateShape(PolygonBig poly, BigDecimal axisVal, boolean hAxis) {

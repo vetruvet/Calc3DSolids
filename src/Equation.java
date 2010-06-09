@@ -1,5 +1,6 @@
-import java.util.*;
-import java.math.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Equation {
 	private String equString, indepVar;
