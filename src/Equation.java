@@ -499,6 +499,7 @@ public class Equation {
 		return null;
 	}
 	
+	@Override
 	public String toString() {
 		String out = "";
 		out += "f(";

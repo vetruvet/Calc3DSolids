@@ -1415,6 +1415,7 @@ public class CalcSolidsWindow extends JFrame {
 	}
 	
 	private class EquTask extends GraphTask {
+		@Override
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
 			if (!init(false)) {
@@ -1456,6 +1457,7 @@ public class CalcSolidsWindow extends JFrame {
 	}
 	
 	private class AreaTask extends GraphTask {
+		@Override
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
 			if (!init(true)) {
@@ -1514,6 +1516,7 @@ public class CalcSolidsWindow extends JFrame {
 	}
 	
 	private class VolumeTask extends GraphTask {
+		@Override
 		protected Void doInBackground() {
 			setProgressBar("Parsing Inputs...");
 			if (!init(true)) {
@@ -1836,6 +1839,7 @@ public class CalcSolidsWindow extends JFrame {
 			LOADER.setLoaderTask(this);
 		}
 		
+		@Override
 		protected Void doInBackground() {
 			try {
 				LOADER.loadLibs();

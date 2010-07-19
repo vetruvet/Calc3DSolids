@@ -49,6 +49,7 @@ public final class NativeLibLoader {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException("Cloning NativeLibLoader not allowed!");
 	}

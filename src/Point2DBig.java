@@ -32,6 +32,7 @@ public class Point2DBig {
 		return ((this.getX().compareTo(pt.getX()) == 0) && (this.getY().compareTo(pt.getY()) == 0));
 	}
 	
+	@Override
 	public String toString() {
 		return "(" + x.toString() + ", " + y.toString() + ")";
 	}
