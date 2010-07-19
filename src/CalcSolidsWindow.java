@@ -782,7 +782,7 @@ public class CalcSolidsWindow extends JFrame {
 		JMenu fileMenu = new JMenu("File");
 		rootBar.add(fileMenu);
 		
-		JMenuItem saveItem = new JMenuItem("Save");
+		JMenuItem saveItem = new JMenuItem("Save", CalcUtils.getImageIcon("Images/save.gif"));
 		saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		saveItem.getAccessibleContext().setAccessibleDescription("Save the current set of inputs to a file");
 		saveItem.addActionListener(new ActionListener() {
@@ -809,7 +809,7 @@ public class CalcSolidsWindow extends JFrame {
 		});
 		fileMenu.add(saveItem);
 		
-		JMenuItem openItem = new JMenuItem("Open");
+		JMenuItem openItem = new JMenuItem("Open", CalcUtils.getImageIcon("Images/open.gif"));
 		openItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 		openItem.getAccessibleContext().setAccessibleDescription("Read inputs from a previously saved file.");
 		openItem.addActionListener(new ActionListener() {
@@ -831,7 +831,7 @@ public class CalcSolidsWindow extends JFrame {
 		});
 		fileMenu.add(openItem);
 		
-		JMenuItem resetItem = new JMenuItem("Reset");
+		JMenuItem resetItem = new JMenuItem("Reset", CalcUtils.getImageIcon("Images/new.gif"));
 		resetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
 		resetItem.getAccessibleContext().setAccessibleDescription("Reset all inputs to their default state");
 		resetItem.addActionListener(new ActionListener() {
@@ -879,7 +879,7 @@ public class CalcSolidsWindow extends JFrame {
 		
 		fileMenu.addSeparator();
 		
-		JMenuItem exitItem = new JMenuItem("Exit");
+		JMenuItem exitItem = new JMenuItem("Exit", CalcUtils.getImageIcon("Images/stop.gif"));
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
 		exitItem.getAccessibleContext().setAccessibleDescription("Exit the program");
 		exitItem.addActionListener(new ActionListener() {
@@ -913,7 +913,7 @@ public class CalcSolidsWindow extends JFrame {
 		
 		graphMenu.addSeparator();
 		
-		JMenuItem captureItem = new JMenuItem("Save Graph");
+		JMenuItem captureItem = new JMenuItem("Save Graph", CalcUtils.getImageIcon("Images/saveAs.gif"));
 		captureItem.getAccessibleContext().setAccessibleDescription("Save the image currently displayed by the graph");
 		captureItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK));
 		captureItem.addActionListener(new ActionListener() {
@@ -978,7 +978,7 @@ public class CalcSolidsWindow extends JFrame {
 		JMenu helpMenu = new JMenu("Help");
 		rootBar.add(helpMenu);
 		
-		JMenuItem helpItem = new JMenuItem("Help");
+		JMenuItem helpItem = new JMenuItem("Help", CalcUtils.getImageIcon("Images/help.gif"));
 		helpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		helpItem.getAccessibleContext().setAccessibleDescription("Get help with using this program");
 		helpItem.addActionListener(new ActionListener() {
@@ -1136,7 +1136,7 @@ public class CalcSolidsWindow extends JFrame {
 		});
 		helpMenu.add(helpItem);
 		
-		JMenuItem updateItem = new JMenuItem("Update");
+		JMenuItem updateItem = new JMenuItem("Update", CalcUtils.getImageIcon("Images/refresh.gif"));
 		updateItem.getAccessibleContext().setAccessibleDescription("Check for Available Updates to this program");
 		updateItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1230,7 +1230,7 @@ public class CalcSolidsWindow extends JFrame {
 		
 		helpMenu.addSeparator();
 		
-		JMenuItem aboutItem = new JMenuItem("About");
+		JMenuItem aboutItem = new JMenuItem("About", CalcUtils.getImageIcon("Images/info.gif"));
 		aboutItem.getAccessibleContext().setAccessibleDescription("About this program");
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
