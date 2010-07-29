@@ -75,11 +75,12 @@ public class Grapher extends JPanel {
 
 		Canvas3D c3d = new Canvas3D(gc);
 		c3d.addKeyListener(new KeyListener() {
+			@Override
 			public void keyTyped(KeyEvent e) {
 				if (Character.toLowerCase(e.getKeyChar()) == 'r') resetView();
 			}
-			public void keyReleased(KeyEvent e) { }
-			public void keyPressed(KeyEvent e) { }
+			@Override public void keyReleased(KeyEvent e) { }
+			@Override public void keyPressed(KeyEvent e) { }
 		});
 		add(BorderLayout.CENTER, c3d);
 

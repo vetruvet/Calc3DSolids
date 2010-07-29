@@ -308,7 +308,8 @@ public class CalcUtils {
 			Method method = methods[q];
 			String name = method.getName();
 			if (name.startsWith("remove") && name.endsWith("Listener")) {
-				Class[] params = method.getParameterTypes();
+				Class<? extends EventListener>[] params = 
+					(Class<? extends EventListener>[]) method.getParameterTypes();
 				if (params.length == 1) {
 					EventListener[] listeners = null;
 					try {

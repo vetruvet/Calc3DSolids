@@ -122,18 +122,21 @@ public class CalcSolidsWindow extends JFrame {
 	private HashMap<String, JLabel> graphLabels = new HashMap<String, JLabel>();
 	
 	private final ActionListener EQU_LISTEN = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			(new EquTask()).execute();
 		}
 	};
 	
 	private final ActionListener G2D_LISTEN = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			(new AreaTask()).execute();
 		}
 	};
 	
 	private final ActionListener G3D_LISTEN = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			(new VolumeTask()).execute();
 		}
@@ -189,6 +192,7 @@ public class CalcSolidsWindow extends JFrame {
 		loadProg.setFont(new Font(origFont.getFamily(), origFont.getStyle(), origFont.getSize() + 4));
 		
 		loadTask.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				if (e.getPropertyName().equals("progress")) {
 					loadProg.setValue(((Integer) e.getNewValue()).intValue());
@@ -198,15 +202,16 @@ public class CalcSolidsWindow extends JFrame {
 		
 		progDiag.getContentPane().add(loadProg);
 		progDiag.addWindowListener(new WindowListener() {
+			@Override
 			public void windowOpened(WindowEvent e) {
 				loadTask.execute();
 			}
-			public void windowActivated(WindowEvent arg0) { }
-			public void windowClosed(WindowEvent e) { }
-			public void windowClosing(WindowEvent e) { }
-			public void windowDeactivated(WindowEvent e) { }
-			public void windowDeiconified(WindowEvent e) { }
-			public void windowIconified(WindowEvent e) { }
+			@Override public void windowActivated(WindowEvent arg0) { }
+			@Override public void windowClosed(WindowEvent e) { }
+			@Override public void windowClosing(WindowEvent e) { }
+			@Override public void windowDeactivated(WindowEvent e) { }
+			@Override public void windowDeiconified(WindowEvent e) { }
+			@Override public void windowIconified(WindowEvent e) { }
 		});
 		
 		progDiag.pack();
@@ -225,6 +230,7 @@ public class CalcSolidsWindow extends JFrame {
 		CSW.setVisible(true);
 		
 		CSW.addWindowListener(new WindowListener() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				try {
 					String execStr = "\"" + CalcConst.JAVA_BIN_PATH + "\"";
@@ -245,12 +251,12 @@ public class CalcSolidsWindow extends JFrame {
 					JOptionPane.showMessageDialog(null, "Unable to start native library unloading", "Error Unloading", JOptionPane.ERROR_MESSAGE);
 				}
 			}
-			public void windowOpened(WindowEvent e) { }
-			public void windowIconified(WindowEvent e) { }
-			public void windowDeiconified(WindowEvent e) { }
-			public void windowDeactivated(WindowEvent e) { }
-			public void windowClosed(WindowEvent e) { }
-			public void windowActivated(WindowEvent e) { }
+			@Override public void windowOpened(WindowEvent e) { }
+			@Override public void windowIconified(WindowEvent e) { }
+			@Override public void windowDeiconified(WindowEvent e) { }
+			@Override public void windowDeactivated(WindowEvent e) { }
+			@Override public void windowClosed(WindowEvent e) { }
+			@Override public void windowActivated(WindowEvent e) { }
 		});
 		
 		if (args.length == 1) {
@@ -297,12 +303,14 @@ public class CalcSolidsWindow extends JFrame {
 		eq1Text.getAccessibleContext().setAccessibleDescription("Enter the equation here");
 		eq1Text.setForeground(HOLDER_COLOR);
 		eq1Text.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (eq1Text.getText().equals(EQ1HOLDER)) eq1Text.setText("");
 				eq1Text.setForeground(Color.BLACK);
 				eq1Text.selectAll();
 				lastText = eq1Text.getText();
 			}
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (eq1Text.getText().equals("")) {
 					eq1Text.setText(EQ1HOLDER);
@@ -336,12 +344,14 @@ public class CalcSolidsWindow extends JFrame {
 		eq2Text.getAccessibleContext().setAccessibleDescription("Enter the equation here");
 		eq2Text.setForeground(HOLDER_COLOR);
 		eq2Text.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (eq2Text.getText().equals(EQ2HOLDER)) eq2Text.setText("");
 				eq2Text.setForeground(Color.BLACK);
 				eq2Text.selectAll();
 				lastText = eq2Text.getText();
 			}
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (eq2Text.getText().equals("")) {
 					eq2Text.setText(EQ2HOLDER);
@@ -375,12 +385,14 @@ public class CalcSolidsWindow extends JFrame {
 		eq3Text.getAccessibleContext().setAccessibleDescription("Enter the equation here");
 		eq3Text.setForeground(HOLDER_COLOR);
 		eq3Text.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (eq3Text.getText().equals(EQ3HOLDER)) eq3Text.setText("");
 				eq3Text.setForeground(Color.BLACK);
 				eq3Text.selectAll();
 				lastText = eq3Text.getText();
 			}
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (eq3Text.getText().equals("")) {
 					eq3Text.setText(EQ3HOLDER);
@@ -414,12 +426,14 @@ public class CalcSolidsWindow extends JFrame {
 		eq4Text.getAccessibleContext().setAccessibleDescription("Enter the equation here");
 		eq4Text.setForeground(HOLDER_COLOR);
 		eq4Text.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (eq4Text.getText().equals(EQ4HOLDER)) eq4Text.setText("");
 				eq4Text.setForeground(Color.BLACK);
 				eq4Text.selectAll();
 				lastText = eq4Text.getText();
 			}
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (eq4Text.getText().equals("")) {
 					eq4Text.setText(EQ4HOLDER);
@@ -453,12 +467,14 @@ public class CalcSolidsWindow extends JFrame {
 		axisText.getAccessibleContext().setAccessibleDescription("Enter axis value here");
 		axisText.setForeground(HOLDER_COLOR);
 		axisText.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (axisText.getText().equals(AXSHOLDER)) axisText.setText("");
 				axisText.setForeground(Color.BLACK);
 				axisText.selectAll();
 				lastText = axisText.getText();
 			}
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (axisText.getText().equals("")) {
 					axisText.setText(AXSHOLDER);
@@ -516,6 +532,7 @@ public class CalcSolidsWindow extends JFrame {
 				CalcUtils.crossSectShapeAsStr(CrossSectionType.EQUI_TRIANGLE),
 				CalcUtils.crossSectShapeAsStr(CrossSectionType.ISO_TRIANGLE) });
 		sectionBox.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String newSel = (String) sectionBox.getSelectedItem();
 				if (newSel.equals(CalcUtils.crossSectShapeAsStr(CrossSectionType.RECTANGLE)) ||
@@ -535,12 +552,14 @@ public class CalcSolidsWindow extends JFrame {
 		heightText.getAccessibleContext().setAccessibleDescription("Enter constant height here");
 		heightText.setForeground(HOLDER_COLOR);
 		heightText.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (heightText.getText().equals(HEIGHTHOLDER)) heightText.setText("");
 				heightText.setForeground(Color.BLACK);
 				heightText.selectAll();
 				lastText = heightText.getText();
 			}
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (heightText.getText().equals("")) {
 					heightText.setText(HEIGHTHOLDER);
@@ -628,6 +647,7 @@ public class CalcSolidsWindow extends JFrame {
 		JToggleButton axisTg = new JToggleButton("Axes", true);
 		axisTg.getAccessibleContext().setAccessibleDescription("Toggle the axes on or off");
 		axisTg.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				graph.toggleAxes();
 			}
@@ -637,6 +657,7 @@ public class CalcSolidsWindow extends JFrame {
 		JToggleButton polyTg = new JToggleButton("Region", true);
 		polyTg.getAccessibleContext().setAccessibleDescription("Toggle the shaded area on or off");
 		polyTg.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				graph.toggleSolid();
 			}
@@ -646,6 +667,7 @@ public class CalcSolidsWindow extends JFrame {
 		JToggleButton equTg = new JToggleButton("Functions", true);
 		equTg.getAccessibleContext().setAccessibleDescription("Toggle the equations on or off");
 		equTg.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				graph.toggleEquations();
 			}
@@ -655,6 +677,7 @@ public class CalcSolidsWindow extends JFrame {
 		JToggleButton shapeTg = new JToggleButton("Rep. Shapes", true);
 		shapeTg.getAccessibleContext().setAccessibleDescription("Toggle the representative shapes on or off");
 		shapeTg.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				graph.toggleRepShapes();
 			}
@@ -664,6 +687,7 @@ public class CalcSolidsWindow extends JFrame {
 		JToggleButton solidTg = new JToggleButton("Solid", true);
 		solidTg.getAccessibleContext().setAccessibleDescription("Toggle the 3D solid on or off");
 		solidTg.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				graph.toggleSolid();
 			}
@@ -673,6 +697,7 @@ public class CalcSolidsWindow extends JFrame {
 		JToggleButton wireTg = new JToggleButton("Wireframe Solid", true);
 		wireTg.getAccessibleContext().setAccessibleDescription("Toggle the wireframe solid on or off");
 		wireTg.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				graph.toggleWireframes();
 			}
@@ -695,6 +720,7 @@ public class CalcSolidsWindow extends JFrame {
 		viewReset.setAlignmentX(Component.CENTER_ALIGNMENT);
 		viewReset.getAccessibleContext().setAccessibleDescription("Reset the view of the graph");
 		viewReset.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				graph.resetView();
 			}
@@ -705,6 +731,7 @@ public class CalcSolidsWindow extends JFrame {
 		graphHide.setAlignmentX(Component.CENTER_ALIGNMENT);
 		graphHide.getAccessibleContext().setAccessibleDescription("Hide the graph");
 		graphHide.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				graphContentPanel.setVisible(false);
 				CalcSolidsWindow.this.pack();
@@ -786,6 +813,7 @@ public class CalcSolidsWindow extends JFrame {
 		saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		saveItem.getAccessibleContext().setAccessibleDescription("Save the current set of inputs to a file");
 		saveItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc;
 				if (lastPath == null) fc = new JFileChooser();
@@ -813,6 +841,7 @@ public class CalcSolidsWindow extends JFrame {
 		openItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 		openItem.getAccessibleContext().setAccessibleDescription("Read inputs from a previously saved file.");
 		openItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc;
 				if (lastPath == null) fc = new JFileChooser();
@@ -835,6 +864,7 @@ public class CalcSolidsWindow extends JFrame {
 		resetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
 		resetItem.getAccessibleContext().setAccessibleDescription("Reset all inputs to their default state");
 		resetItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				eq1Text.setText(EQ1HOLDER);
 				eq2Text.setText(EQ2HOLDER);
@@ -883,6 +913,7 @@ public class CalcSolidsWindow extends JFrame {
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
 		exitItem.getAccessibleContext().setAccessibleDescription("Exit the program");
 		exitItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				CalcSolidsWindow.this.setVisible(false);
 				CalcSolidsWindow.this.dispose();
@@ -917,6 +948,7 @@ public class CalcSolidsWindow extends JFrame {
 		captureItem.getAccessibleContext().setAccessibleDescription("Save the image currently displayed by the graph");
 		captureItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK));
 		captureItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JFileChooser fc;
@@ -982,6 +1014,7 @@ public class CalcSolidsWindow extends JFrame {
 		helpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		helpItem.getAccessibleContext().setAccessibleDescription("Get help with using this program");
 		helpItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JDialog diag = new JDialog(CalcSolidsWindow.this, "Help", true);
 				diag.getContentPane().setLayout(new BorderLayout(3, 3));
@@ -1012,6 +1045,7 @@ public class CalcSolidsWindow extends JFrame {
 				backButton.setEnabled(false);
 				backButton.getAccessibleContext().setAccessibleDescription("Go back a page");
 				backButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent evt) {
 						URL lastPage = backList.remove(backList.size() - 1);
 						try {
@@ -1029,6 +1063,7 @@ public class CalcSolidsWindow extends JFrame {
 				homeButton.setEnabled(true);
 				homeButton.getAccessibleContext().setAccessibleDescription("Go to the first page");
 				homeButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent evt) {
 						try {
 							backList.add(helpPane.getPage());
@@ -1046,6 +1081,7 @@ public class CalcSolidsWindow extends JFrame {
 				fwdButton.setEnabled(false);
 				fwdButton.getAccessibleContext().setAccessibleDescription("Go forward a page");
 				fwdButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent evt) {
 						URL nextPage = fwdList.remove(fwdList.size() - 1);
 						try {
@@ -1061,6 +1097,7 @@ public class CalcSolidsWindow extends JFrame {
 				});
 				
 				helpPane.addHyperlinkListener(new HyperlinkListener() {
+					@Override
 					public void hyperlinkUpdate(HyperlinkEvent evt) {
 						if (evt.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
 						try {
@@ -1107,6 +1144,7 @@ public class CalcSolidsWindow extends JFrame {
 				JButton closeButton = new JButton("Close");
 				closeButton.getAccessibleContext().setAccessibleDescription("Close the help dialog");
 				closeButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent evt) {
 						diag.setVisible(false);
 						diag.dispose();
@@ -1139,6 +1177,7 @@ public class CalcSolidsWindow extends JFrame {
 		JMenuItem updateItem = new JMenuItem("Update", CalcUtils.getImageIcon("Images/refresh.gif"));
 		updateItem.getAccessibleContext().setAccessibleDescription("Check for Available Updates to this program");
 		updateItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!CalcConst.RUNNING_FROM_JAR) {
 					JOptionPane.showMessageDialog(CalcSolidsWindow.this, "Cannot update from outside JAR", "Run from JAR to update!", JOptionPane.ERROR_MESSAGE);
@@ -1233,9 +1272,10 @@ public class CalcSolidsWindow extends JFrame {
 		JMenuItem aboutItem = new JMenuItem("About", CalcUtils.getImageIcon("Images/info.gif"));
 		aboutItem.getAccessibleContext().setAccessibleDescription("About this program");
 		aboutItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(CalcSolidsWindow.this, 
-						"Calculus 3D Solids v2.9.9b (6274 SLoC)\n" +
+						"Calculus 3D Solids v3.0 RC (6382 SLoC)\n" +
 						"\n" +
 						"Written by: Valera Trubachev\n" + 
 						"   \u00A9 2009-2010\n" + 
@@ -1865,6 +1905,7 @@ public class CalcSolidsWindow extends JFrame {
 			INDET = !newStr.equals(PROGRESS_READY);
 		}
 		
+		@Override
 		public void run() {
 			progress.setString(NEW_STR);
 			progress.setIndeterminate(INDET);
